@@ -1,0 +1,20 @@
+BOARD=rock
+
+#configuration for u-boot
+UBOOT_REPO=""
+UBOOT_REV=""
+UBOOT_DEFCONFIG=""
+
+#configuration for linux kernel
+KERNEL_REPO=""
+KERNEL_REV=""
+KERNEL_DEFCONFIG=""
+
+#parameter file defines nand/emmc partitions and kernel cmdline
+PARAMETER=""
+
+#package-file determins what to be packed into a nand/emmc flashable image
+PACKAGE-FILE=""
+
+#rootfs
+ROOTFS=""

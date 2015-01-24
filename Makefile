@@ -82,8 +82,21 @@ linux-pack: tools mkbootimg ramdisk rootfs kernel uboot
 	scripts/$(BOARD)_mkupdateimg.sh
 
 help:
+	@echo ""
 	@echo "rockchip linux bsp"
-	echo $(DESTDIR)
+	@echo "Usage:"
+	@echo "  make          		- Default 'make' pack all"
+	@echo "  make	tools		- install tools"
+	@echo "  make	flash tools	- install flash tools to flash image"
+	@echo "  make	uboot		- compile uboot"
+	@echo "  make	kernel		- compile kernel"
+	@echo "  make	ramdisk		- prepare initrd.img"
+	@echo "  make	mkbootimg	- prepare linux-boot.img"
+	@echo "  make	rootfs		- prepare rootfs.img"
+	@echo "  make	linux-pack	- generate update.img"
+	@echo "  make	clean		- delete some useless files"
+	@echo "  make	update		- update the project"
+	@echo ""
 
 clean:
 	rm -rf $(K_O_PATH)

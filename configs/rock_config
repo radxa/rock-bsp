@@ -1,20 +1,22 @@
-BOARD=rock
-
 #configuration for u-boot
-UBOOT_REPO=""
-UBOOT_REV=""
-UBOOT_DEFCONFIG=""
+UBOOT_REPO="git://x1/linux/u-boot-rockchip.git"
+UBOOT_REV=u-boot-rk3188
+UBOOT_DEFCONFIG=rk30xx
+UBOOT=u-boot-rockchip
 
 #configuration for linux kernel
-KERNEL_REPO=""
-KERNEL_REV=""
-KERNEL_DEFCONFIG=""
+KERNEL_REPO="git://x1/linux/linux-rockchip.git"
+KERNEL_REV=radxa-stable-3.0
+KERNEL_DEFCONFIG=radxa_rock_linux_defconfig
+KERNEL=linux-rockchip
 
-#parameter file defines nand/emmc partitions and kernel cmdline
-PARAMETER=""
+#initrd
+RAMDISK_REPO="https://github.com/radxa/initrd.git"
+MKBOOTIMG_REPO="https://github.com/neo-technologies/rockchip-mkbootimg.git"
 
-#package-file determins what to be packed into a nand/emmc flashable image
-PACKAGE-FILE=""
+#tools
+FTOOLS_REPO="https://github.com/linux-rockchip/rkflashtool.git"
+TOOLS_REPO="https://github.com/radxa/rockchip-pack-tools.git"
 
-#rootfs
-ROOTFS=""
+#board name
+BOARD=rock

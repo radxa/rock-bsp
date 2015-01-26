@@ -9,6 +9,7 @@ KERNEL_REPO="git://x1/linux/linux-rockchip.git"
 KERNEL_REV=radxa-stable-3.0
 KERNEL_DEFCONFIG=radxa_rock_linux_defconfig
 KERNEL=linux-rockchip
+MAKE_ARG=
 
 #initrd
 RAMDISK_REPO="https://github.com/radxa/initrd.git"

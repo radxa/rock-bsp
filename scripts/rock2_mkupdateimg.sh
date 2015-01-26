@@ -14,7 +14,7 @@ if [ -d "PACK/Linux" ];then
 fi
 
 #prepare boot.img
-mkbootimg --kernel $KERNEL/arch/arm/boot/Image --ramdisk $RAMDISK/initrd.img -o $PACK/Linux/boot-linux.img
+mkbootimg --kernel $KERNEL/arch/arm/boot/Image --ramdisk $RAMDISK/initrd.img --second $KERNEL/resource.img -o $PACK/Linux/boot-linux.img
 
 #pack update.img
 cd $(PACK) && ./mkupdate.sh && cd -

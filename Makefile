@@ -14,72 +14,77 @@ K_BLD_CONFIG=$(BOARD)/$(KERNEL)/.config
 
 CROSS_COMPILE=/usr/local/arm-eabi-4.6/bin/arm-eabi-
 J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l` \* 2)
+Q=@
 
 #all: kernel tools rootfs uboot ramdisk mkbootimg linux-pack
-all: rootfs
+all: tools
 
 $(BOARD)/$(KERNEL)/.git:
-	mkdir -p $(BOARD)
-	git clone -n $(KERNEL_REPO) $(BOARD)/$(KERNEL)
-	cd $(BOARD)/$(KERNEL) && git checkout $(KERNEL_REV)
+	$(Q)mkdir -p $(BOARD)/$(KERNEL)
+	$(Q)git clone -n $(KERNEL_REPO) $(BOARD)/$(KERNEL)
+	$(Q)cd $(BOARD)/$(KERNEL) && git checkout $(KERNEL_REV)
 
 $(K_BLD_CONFIG): $(BOARD)/$(KERNEL)/.git
-	mkdir -p $(K_O_PATH)
-	$(MAKE) -C $(BOARD)/$(KERNEL) O=$(K_O_PATH) ARCH=arm $(KERNEL_DEFCONFIG)
+	$(Q)mkdir -p $(K_O_PATH)
+	$(Q)$(MAKE) -C $(BOARD)/$(KERNEL) O=$(K_O_PATH) ARCH=arm $(KERNEL_DEFCONFIG)
 
 kernel: $(K_BLD_CONFIG)
-	$(MAKE) -C $(BOARD)/$(KERNEL) O=$(K_O_PATH) ARCH=arm oldconfig
-	$(MAKE) -C $(BOARD)/$(KERNEL) O=$(K_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
+	$(Q)$(MAKE) -C $(BOARD)/$(KERNEL) O=$(K_O_PATH) ARCH=arm oldconfig
+	$(Q)$(MAKE) -C $(BOARD)/$(KERNEL) $(MAKE_ARG) O=$(K_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
 
 rootfs: tools
-	scripts/$(BOARD)_mkrootfs.sh
+	$(Q)scripts/$(BOARD)_mkrootfs.sh
 
 $(BOARD)/$(UBOOT)/.git:
-	git clone -n $(UBOOT_REPO) $(BOARD)/$(UBOOT)
-	cd $(BOARD)/$(UBOOT) && git checkout $(UBOOT_REV)
+	$(Q)git clone -n $(UBOOT_REPO) $(BOARD)/$(UBOOT)
+	$(Q)cd $(BOARD)/$(UBOOT) && git checkout $(UBOOT_REV)
 
 $(U_CONFIG_H): $(BOARD)/$(UBOOT)/.git
-	mkdir -p $(U_O_PATH)
-	$(MAKE) -C $(BOARD)/$(UBOOT) O=$(U_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm $(UBOOT_DEFCONFIG)
+	$(Q)mkdir -p $(U_O_PATH)
+	$(Q)$(MAKE) -C $(BOARD)/$(UBOOT) O=$(U_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm $(UBOOT_DEFCONFIG)
 
 uboot: $(U_CONFIG_H)
-	$(MAKE) -C $(BOARD)/$(UBOOT) all O=$(U_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
+	$(Q)$(MAKE) -C $(BOARD)/$(UBOOT) all O=$(U_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
 
 $(INITRD)/.git:
-	mkdir -p $(INITRD)
-	git clone $(RAMDISK_REPO) $(INITRD)
-	$(MAKE) -C $(INITRD)
+	$(Q)mkdir -p $(INITRD)
+	$(Q)git clone $(RAMDISK_REPO) $(INITRD)
+	$(Q)$(MAKE) -C $(INITRD)
 
 #initrd.img
 ramdisk: $(INITRD)/.git
 
 $(RAMDISK)/rockchip-mkbootimg/.git:
-	mkdir -p $(RAMDISK)/rockchip-mkbootimg
-	git clone $(MKBOOTIMG_REPO) $(RAMDISK)/rockchip-mkbootimg
-	$(MAKE) -C $(RAMDISK)/rockchip-mkbootimg
-	$(MAKE) -C $(RAMDISK)/rockchip-mkbootimg install
+	$(Q)mkdir -p $(RAMDISK)/rockchip-mkbootimg
+	$(Q)git clone $(MKBOOTIMG_REPO) $(RAMDISK)/rockchip-mkbootimg
+	$(Q)$(MAKE) -C $(RAMDISK)/rockchip-mkbootimg
+	$(Q)$(MAKE) -C $(RAMDISK)/rockchip-mkbootimg install
 
 #mkbootimg
 mkbootimg: $(RAMDISK)/rockchip-mkbootimg/.git
 
 $(BOARD)/package-tools/.git:
-	mkdir -p $(BOARD)/package-tools
-	git clone $(TOOLS_REPO) $(BOARD)/package-tools
+	$(Q)mkdir -p $(BOARD)/package-tools
+	$(Q)git clone $(TOOLS_REPO) $(BOARD)/package-tools
 
 #tools
 tools: $(BOARD)/package-tools/.git
 
 #$(BOARD)/rkflashtool/.git:
-#	mkdir -p $(BOARD)/rkflashtool
-#	git clone $(FTOOLS_REPO) $(BOARD)/rkflashtool
-#	$(MAKE) -C $(BOARD)/rkflashtool
-#	$(MAKE) -C $(BOARD)/rkflashtool install
+#	$(Q)mkdir -p $(BOARD)/rkflashtool
+#	$(Q)git clone $(FTOOLS_REPO) $(BOARD)/rkflashtool
+#	$(Q)$(MAKE) -C $(BOARD)/rkflashtool
+#	$(Q)$(MAKE) -C $(BOARD)/rkflashtool install
 
 #flash tools
 #flash-tools: $(BOARD)/rkflashtool/.git
 
 linux-pack: tools mkbootimg ramdisk rootfs kernel uboot
-	scripts/$(BOARD)_mkupdateimg.sh
+	$(Q)scripts/$(BOARD)_mkupdateimg.sh
+
+#update:
+#	$(Q)git fetch x1
+#	$(Q)git rebase x1/master
 
 help:
 	@echo ""

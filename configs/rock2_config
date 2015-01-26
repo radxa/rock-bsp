@@ -1,0 +1,23 @@
+#configuration for u-boot
+UBOOT_REPO="git@x1:/rockchip/rk/u-boot"
+UBOOT_REV=rkproduct
+UBOOT_DEFCONFIG=rk3288_defconfig
+UBOOT=u-boot-rk3288
+
+#configuration for linux kernel
+KERNEL_REPO="git://x1/rockchip/rk/kernel.git"
+KERNEL_REV=radxa-rk3288-linux-dev
+KERNEL_DEFCONFIG=rock2_defconfig
+KERNEL=linux-rock2
+MAKE_ARG=rk3288-tb.img
+
+#initrd
+RAMDISK_REPO="https://github.com/radxa/initrd.git"
+MKBOOTIMG_REPO="https://github.com/neo-technologies/rockchip-mkbootimg.git"
+
+#tools
+FTOOLS_REPO="https://github.com/linux-rockchip/rkflashtool.git"
+TOOLS_REPO="git://x1/linux/rock2/pack-tools.git"
+
+#board name
+BOARD=rock2

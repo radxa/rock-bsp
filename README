@@ -4,6 +4,8 @@ rock-bsp
 Getting Started
 ---------------
 
+Attention : before make, you should choice the target board
+
 1. Choose a board doing `./configure my_board`, or `./configure` to see
    the list of supported ones.
 

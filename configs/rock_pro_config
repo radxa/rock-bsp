@@ -1,20 +1,22 @@
+#board name
 BOARD=rock_pro
+SERIAL=rk31
 
 #configuration for u-boot
-UBOOT_REPO=""
-UBOOT_REV=""
-UBOOT_DEFCONFIG=""
+UBOOT_REPO="git://x1/linux/u-boot-rockchip.git"
+UBOOT_REV=u-boot-rk3188
+UBOOT_DEFCONFIG=rk30xx
+UBOOT=u-boot-rockchip
 
 #configuration for linux kernel
-KERNEL_REPO=""
-KERNEL_REV=""
-KERNEL_DEFCONFIG=""
+KERNEL_REPO="git://x1/linux/linux-rockchip.git"
+KERNEL_REV=radxa-stable-3.0
+KERNEL_DEFCONFIG=radxa_rock_linux_defconfig
+KERNEL=linux-rockchip
+MAKE_ARG=
 
-#parameter file defines nand/emmc partitions and kernel cmdline
-PARAMETER=""
+#parameter
+PARAMETER="rock_parameter"
 
-#package-file determins what to be packed into a nand/emmc flashable image
-PACKAGE-FILE=""
-
-#rootfs
-ROOTFS=""
+#package-fil
+PACKAGE_FILE="package-file"

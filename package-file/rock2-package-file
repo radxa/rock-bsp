@@ -1,0 +1,8 @@
+# NAME		Relative path
+#
+#HWDEF		HWDEF
+package-file	package-file
+bootloader	RK3288Loader_uboot_V2.15.02.bin
+parameter	parameter
+boot		Image/boot-linux.img
+linuxroot	../rootfs/rootfs.ext4

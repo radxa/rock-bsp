@@ -32,13 +32,7 @@ if [ $# -eq 0 ];then
 	usage
 elif [ -e "configs/$1_config" ];then
 	cat configs/$1_config > .config
-#	. configs/$1_config
-#	KERNEL=`echo "$KERNEL_REPO" | sed -n -e 's|.*/\([^/]\+\)\.git$|\1|p' -e 's|.*|\t* \0|'`
-#	echo "#kernel dir" >> .config
-#	echo "KERNEL=${KERNEL}" >> .config
-
-#	echo "UBOOT_REV"
-#	echo "BOARD"
+	cat configs/tools_defconfig >> .config
 
 	echo "$1 configured. Now run \`make\`"
 else

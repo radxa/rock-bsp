@@ -1,8 +1,12 @@
+#board name
+BOARD=rock2
+SERIAL=rk32
+
 #configuration for u-boot
 UBOOT_REPO="git@x1:/rockchip/rk/u-boot"
 UBOOT_REV=rkproduct
 UBOOT_DEFCONFIG=rk3288_defconfig
-UBOOT=u-boot-rk3288
+UBOOT=u-boot
 
 #configuration for linux kernel
 KERNEL_REPO="git://x1/rockchip/rk/kernel.git"
@@ -11,13 +15,8 @@ KERNEL_DEFCONFIG=rock2_defconfig
 KERNEL=linux-rock2
 MAKE_ARG=rk3288-tb.img
 
-#initrd
-RAMDISK_REPO="https://github.com/radxa/initrd.git"
-MKBOOTIMG_REPO="https://github.com/neo-technologies/rockchip-mkbootimg.git"
+#parameter
+PARAMETER="rock_parameter"
 
-#tools
-FTOOLS_REPO="https://github.com/linux-rockchip/rkflashtool.git"
-TOOLS_REPO="git://x1/linux/rock2/pack-tools.git"
-
-#board name
-BOARD=rock2
+#package-fil
+PACKAGE_FILE="package-file"

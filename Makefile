@@ -1,50 +1,69 @@
+# rock bsp
+# (C) Copyright 2015, Radxa Limited
+# support@radxa.com
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2 of the License, or (at your
+# option) any later version.
+#
+
 .PHONY: all clean help
-.PHONY: tools flash-tools uboot kernel ramdisk mkbootimg
-.PHONY: rootfs linux-pack
+.PHONY: tools ramdisk toolchain
+.PHONY: uboot kernel rootfs linux-pack
 
 include $(CURDIR)/.config
 
-RAMDISK=$(BOARD)/ramdisk
+OUTPUT_DIR=$(CURDIR)/output
+LINUX_SRC=$(BOARD)/$(KERNEL)
+export UBOOT_SRC=$(CURDIR)/$(BOARD)/$(UBOOT)
+RAMDISK=$(CURDIR)/rockdev/ramdisk
 INITRD=$(RAMDISK)/initrd
-OUT=$(CURDIR)/$(BOARD)/out
-K_O_PATH=$(OUT)/$(BOARD)-linux
-U_O_PATH=$(OUT)/$(BOARD)-u-boot
-U_CONFIG_H=$(U_O_PATH)/include/config.h
-K_BLD_CONFIG=$(BOARD)/$(KERNEL)/.config
+K_O_PATH=$(OUTPUT_DIR)/$(BOARD)/$(BOARD)-linux
+export U_O_PATH=$(OUTPUT_DIR)/$(BOARD)/$(BOARD)-uboot
+U_CONFIG_H=$(UBOOT_SRC)/include/config.h
+K_BLD_CONFIG=$(LINUX_SRC)/.config
 
-CROSS_COMPILE=/usr/local/arm-eabi-4.6/bin/arm-eabi-
-J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l` \* 2)
+CROSS_COMPILE=$(CURDIR)/available-tools/arm-eabi-4.6/bin/arm-eabi-
+#J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l` \* 2)
+J=12
 Q=@
 
-#all: kernel tools rootfs uboot ramdisk mkbootimg linux-pack
-all: tools
+#all: attention kernel tools rootfs uboot ramdisk mkbootimg linux-pack
+all: rootfs tools toolchain ramdisk kernel uboot linux-pack
 
-$(BOARD)/$(KERNEL)/.git:
-	$(Q)mkdir -p $(BOARD)/$(KERNEL)
-	$(Q)git clone -n $(KERNEL_REPO) $(BOARD)/$(KERNEL)
-	$(Q)cd $(BOARD)/$(KERNEL) && git checkout $(KERNEL_REV)
+$(LINUX_SRC)/.git:
+	$(Q)mkdir -p $(LINUX_SRC)
+	$(Q)git clone -n $(KERNEL_REPO) $(LINUX_SRC)
+	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV)
 
-$(K_BLD_CONFIG): $(BOARD)/$(KERNEL)/.git
-	$(Q)mkdir -p $(K_O_PATH)
-	$(Q)$(MAKE) -C $(BOARD)/$(KERNEL) O=$(K_O_PATH) ARCH=arm $(KERNEL_DEFCONFIG)
+$(K_BLD_CONFIG): $(LINUX_SRC)/.git
+	$(Q)mkdir -p $(K_O_PATH)/modules
+	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm $(KERNEL_DEFCONFIG)
 
 kernel: $(K_BLD_CONFIG)
-	$(Q)$(MAKE) -C $(BOARD)/$(KERNEL) O=$(K_O_PATH) ARCH=arm oldconfig
-	$(Q)$(MAKE) -C $(BOARD)/$(KERNEL) $(MAKE_ARG) O=$(K_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
+	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm oldconfig
+	$(Q)$(MAKE) -C $(LINUX_SRC) $(MAKE_ARG) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
+	$(Q)$(MAKE) -C $(LINUX_SRC) $(MAKE_ARG) ARCH=arm CROSS_COMPILE=$(CROSS_COMPILE) -j$J
+
+linux-config: $(K_BLD_CONFIG)
+	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm menuconfig
 
 rootfs: tools
-	$(Q)scripts/$(BOARD)_mkrootfs.sh
+	$(Q)scripts/mkrootfs.sh
 
-$(BOARD)/$(UBOOT)/.git:
-	$(Q)git clone -n $(UBOOT_REPO) $(BOARD)/$(UBOOT)
-	$(Q)cd $(BOARD)/$(UBOOT) && git checkout $(UBOOT_REV)
+$(UBOOT_SRC)/.git:
+	$(Q)mkdir -p $(UBOOT_SRC)
+	$(Q)git clone -n $(UBOOT_REPO) $(UBOOT_SRC)
+	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV)
 
-$(U_CONFIG_H): $(BOARD)/$(UBOOT)/.git
-	$(Q)mkdir -p $(U_O_PATH)
-	$(Q)$(MAKE) -C $(BOARD)/$(UBOOT) O=$(U_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm $(UBOOT_DEFCONFIG)
+$(U_CONFIG_H): $(UBOOT_SRC)/.git
+	$(Q)mkdir -p $(K_O_PATH)
+	$(Q)$(MAKE) -C $(UBOOT_SRC) mrproper
+	$(Q)$(MAKE) -C $(UBOOT_SRC) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm $(UBOOT_DEFCONFIG)
 
 uboot: $(U_CONFIG_H)
-	$(Q)$(MAKE) -C $(BOARD)/$(UBOOT) all O=$(U_O_PATH) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
+	$(Q)$(MAKE) -C $(UBOOT_SRC) all CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
 
 $(INITRD)/.git:
 	$(Q)mkdir -p $(INITRD)
@@ -60,50 +79,59 @@ $(RAMDISK)/rockchip-mkbootimg/.git:
 	$(Q)$(MAKE) -C $(RAMDISK)/rockchip-mkbootimg
 	$(Q)$(MAKE) -C $(RAMDISK)/rockchip-mkbootimg install
 
-#mkbootimg
-mkbootimg: $(RAMDISK)/rockchip-mkbootimg/.git
-
-$(BOARD)/package-tools/.git:
-	$(Q)mkdir -p $(BOARD)/package-tools
-	$(Q)git clone $(TOOLS_REPO) $(BOARD)/package-tools
-
 #tools
-tools: $(BOARD)/package-tools/.git
+tools: $(RAMDISK)/rockchip-mkbootimg/.git
 
-#$(BOARD)/rkflashtool/.git:
-#	$(Q)mkdir -p $(BOARD)/rkflashtool
-#	$(Q)git clone $(FTOOLS_REPO) $(BOARD)/rkflashtool
-#	$(Q)$(MAKE) -C $(BOARD)/rkflashtool
-#	$(Q)$(MAKE) -C $(BOARD)/rkflashtool install
+available-tools/arm-eabi-4.6/.git:
+	$(Q)scripts/toolchain.sh
 
-#flash tools
-#flash-tools: $(BOARD)/rkflashtool/.git
+#toolchain
+toolchain: available-tools/arm-eabi-4.6/.git
 
-linux-pack: tools mkbootimg ramdisk rootfs kernel uboot
+#linux-pack: tools mkbootimg ramdisk rootfs kernel uboot
+linux-pack:
 	$(Q)scripts/$(BOARD)_mkupdateimg.sh
 
-#update:
-#	$(Q)git fetch x1
-#	$(Q)git rebase x1/master
+update:
+	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV)
+	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV)
+
+distclean:
+	rm -rf $(OUTPUT_DIR)/*
+	rm $(CURDIR)/.config
+clean:
+	$(Q)$(MAKE) -C $(K_O_PATH) clean
+	$(Q)$(MAKE) -C $(U_O_PATH) clean
+mrproper:
+	$(Q)$(MAKE) -C $(K_O_PATH) mrproper
+	$(Q)$(MAKE) -C $(U_O_PATH) mrproper
 
 help:
 	@echo ""
-	@echo "rockchip linux bsp"
-	@echo "Usage:"
-	@echo "  make          		- Default 'make' pack all"
-	@echo "  make	tools		- install tools"
+	@echo "		rockchip linux bsp"
+	@echo " ------------------------------------------- "
+	@echo "| error:                                    |"
+	@echo "| No such file or directory                 |"
+	@echo "| No rule to make target                    |"
+	@echo "| '/build3/jim/rock-bsp/.config'. stop      |"
+	@echo "| solutions : ***  'reference README'  ***  |"
+	@echo " ------------------------------------------- "
+	@echo " Usage:"
+	@echo "  make			- Default 'make' pack all"
+	@echo "  make	tools		- Builds open source tools,then install"
 	@echo "  make	flash tools	- install flash tools to flash image"
+	@echo ""
+	@echo "  Optional targets:"
+	@echo "  make	linux-config	- make menuconfig"
 	@echo "  make	uboot		- compile uboot"
 	@echo "  make	kernel		- compile kernel"
 	@echo "  make	ramdisk		- prepare initrd.img"
-	@echo "  make	mkbootimg	- prepare linux-boot.img"
 	@echo "  make	rootfs		- prepare rootfs.img"
+	@echo ""
+	@echo "Packages:"
+	@echo "  make	mkbootimg	- prepare linux-boot.img"
 	@echo "  make	linux-pack	- generate update.img"
+	@echo ""
 	@echo "  make	clean		- delete some useless files"
 	@echo "  make	update		- update the project"
 	@echo ""
-
-clean:
-	rm -rf $(K_O_PATH)
-	rm -rf $(U_O_PATH)
-	rm $(CURDIR)/.config

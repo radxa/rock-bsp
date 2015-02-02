@@ -1,24 +1,31 @@
 #!/bin/bash -e
 
-TOP="$(cd .. && pwd)"
+TOP="$(cd .. && pwd)
+. $TOP/.config
 
 DATE=$(date +"%y-%m-%d-%H%M%S")
-IMAGE="rock2_android_kitkat_${DATE}.img"
-partitions=("parameter" "misc" "kernel" "resource" "boot" "recovery" "system")
+IMAGE="$(BOARD)_${DATE}.img"
+partitions=("parameter" "boot" "linuxroot")
+U_BOOT_BIN="$(basename $U_O_PATH/RK3288*boot*.bin)"
+echo "--------------$(U_BOOT_BIN)---------------------"
 
 function init()
 {
 	if [ "$U_BOOT_BIN"x = ""x  ]; then
-		U_BOOT_BIN="$(basename $TOP/u-boot/RK3288*boot*.bin)"
+		U_BOOT_BIN="$(basename $TOP/rockdev/RK3288*boot*.bin)"
 	fi
 
 	if [ ! -e $U_BOOT_BIN ]; then
-		cp -v $TOP/u-boot/$U_BOOT_BIN .
+		cp -v $U_O_PATH/$U_BOOT_BIN .
 	fi
+
 	old_uboot=`sed '/bootloader/!d' package-file | cut -f 2`
 	if [ "$old_uboot" != "$U_BOOT_BIN" ]; then
 		sed -i 's/'${old_uboot}'/'${U_BOOT_BIN}'/g' package-file
 	fi
+
+	sed -i 's/Image/boot-linux.img/'Image/${BOARD}/boot-linux.img'/g' package-file	
+
 	for part in ${partitions[@]}
 	do
 		img=`sed -e '/#/d' -e '/'$part'/!d' -e '/bootloader/d' package-file | awk '{print substr($2,0)}'`
@@ -35,13 +42,14 @@ function init()
 function pack()
 {
 	echo "start to make update.img..."
-	./afptool -pack ./ Image/update_tmp.img
-#	./rkImageMaker -RK32 $U_BOOT_BIN  Image/update_tmp.img ${IMAGE} -os_type:androidos
+	rm -f update_tmp.img update.img
+	afptool -pack ./ update_tmp.img
+	img_maker -$(SERIAL) $U_BOOT_BIN 1 0 0 update_tmp.img ${IMAGE}
 	echo -e "Image is at \033[1;36m$TOP/rockdev/${IMAGE}\033[00m"
 }
 function clean()
 {
-	if [ `ls *.img | wc -l` -gt 5 ]; then
+	if [ `ls *.img | wc -l` -gt 7 ]; then
 		dir_size=`du -sh . | awk '{print $1}'`
 		echo -e "\033[00;41mThe rockdev size: $dir_size\033[0m"
 		read -p "Do you want to clean it(y/n)?" result

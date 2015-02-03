@@ -9,15 +9,15 @@
 # option) any later version.
 
 TOP=$(pwd)
-
-TARGET=/build3/jim/rock-bsp/rootfs/target_tmp
-IMAGE=rootfs.tar.gz
-OUT_DIR=/build3/jim/rock-bsp/rootfs
+echo "$TOP"
+TARGET=$TOP/rootfs/target_tmp
+OUT_DIR=$TOP/rootfs
+IMAGE=$OUT_DIR/rootfs.tar.gz
 LINARO=linaro-trusty-alip-20141024-684.tar.gz
 
 cleanup() {
-	sudo umount $(TARGET) || true
-	sudo sudo rm -rf $(TARGET)
+	sudo umount $TARGET || true
+	sudo sudo rm -rf $TARGET
 }
 
 die() {
@@ -27,10 +27,12 @@ die() {
 }
 
 init() {
-	rm -f $(OUT_DIR)/rootfs.ext4
-	if [ ! -e "$(OUT_DIR)/$(IMAGE)" ]; then
-		wget -P $(OUT_DIR) http://releases.linaro.org/14.10/ubuntu/trusty-images/alip/linaro-trusty-alip-20141024-684.tar.gz
-		mv $(OUT_DIR)/$(LINARO) $(OUT_DIR)/rootfs.tar.gz
+	if [ ! -e "$IMAGE" ]; then
+		wget -P $OUT_DIR http://releases.linaro.org/14.10/ubuntu/trusty-images/alip/linaro-trusty-alip-20141024-684.tar.gz
+		mv $OUT_DIR/$LINARO $OUT_DIR/rootfs.tar.gz
+	fi
+	if [ ! -e $OUT_DIR/rootfs.ext4 ]; then
+		make_rootfs "$IMAGE" "$OUT_DIR"
 	fi
 }
 
@@ -39,7 +41,7 @@ make_rootfs()
 	echo "Make rootfs"
 	local rootfs=$(readlink -f "$1")
 	local output=$(readlink -f "$2")
-	local fsizeinbytes=$(gzip -lq "$rootfs" | awk -F" " '{print $2}')
+	local fsizeinbytes=$(gzip -lq "$IMAGE" | awk -F" " '{print $2}')
 	local fsizeMB=$(expr $fsizeinbytes / 1024 / 1024 + 200)
 	local d= x=
 	local rootfs_copied=
@@ -75,5 +77,4 @@ make_rootfs()
 	rm -rf $TARGET
 }
 init
-make_rootfs "$IMAGE" "$OUT_DIR"
 cleanup

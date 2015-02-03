@@ -9,7 +9,7 @@
 # option) any later version.
 
 TOP=$(pwd)
-echo "$TOP"
+echo "---------------$output"
 TARGET=$TOP/rootfs/target_tmp
 OUT_DIR=$TOP/rootfs
 IMAGE=$OUT_DIR/rootfs.tar.gz
@@ -48,10 +48,10 @@ make_rootfs()
 
 	echo "Make rootfs.ext4 (size="$fsizeMB")"
 	mkdir -p $TARGET
-	dd if=/dev/zero of=rootfs.ext4 bs=1M count="$fsizeMB"
-	mkfs.ext4 rootfs.ext4
+	dd if=/dev/zero of=$OUT_DIR/rootfs.ext4 bs=1M count="$fsizeMB"
+	mkfs.ext4 $OUT_DIR/rootfs.ext4
 	sudo umount $TARGET || true
-	sudo mount rootfs.ext4 $TARGET -o loop=/dev/loop0
+	sudo mount $OUT_DIR/rootfs.ext4 $TARGET -o loop=/dev/loop0
 
 	cd $TARGET
 	echo "Unpacking $rootfs"
@@ -72,9 +72,6 @@ make_rootfs()
 	[ -n "$rootfs_copied" ] || die "Unsupported rootfs"
 
 	cd - > /dev/null
-
-	mv rootfs.ext4 $output
-	rm -rf $TARGET
 }
 init
 cleanup

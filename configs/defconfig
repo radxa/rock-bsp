@@ -1,0 +1,6 @@
+#all tools
+
+MKBOOTIMG_REPO="https://github.com/neo-technologies/rockchip-mkbootimg.git"
+RKFLASHTOOL_REPO="https://github.com/linux-rockchip/rkflashtool.git"
+
+INITRD_REPO="https://github.com/radxa/initrd.git"

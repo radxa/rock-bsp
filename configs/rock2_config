@@ -6,17 +6,26 @@ SERIAL=rk32
 UBOOT_REPO="git@x1:/rockchip/rk/u-boot"
 UBOOT_REV=rkproduct
 UBOOT_DEFCONFIG=rk3288_defconfig
-UBOOT=u-boot
+UBOOT=u-boot-rock2
 
 #configuration for linux kernel
 KERNEL_REPO="git://x1/rockchip/rk/kernel.git"
 KERNEL_REV=radxa-rk3288-linux-dev
 KERNEL_DEFCONFIG=rock2_defconfig
 KERNEL=linux-rock2
-MAKE_ARG=rk3288-tb.img
+KERNEL_TARGET=rk3288-tb.img
+
+#initrd
+INITRD_REPO="https://github.com/radxa/initrd.git"
 
 #parameter
 PARAMETER="rock_parameter"
 
-#package-fil
+#package-file
 PACKAGE_FILE="package-file"
+
+#rootfs URL
+ROOTFS_URL="http://releases.linaro.org/14.10/ubuntu/trusty-images/alip/linaro-trusty-alip-20141024-684.tar.gz"
+
+#linux-boot.img args
+BOOTIMG_TARGET="--second $LINUX_SRC/resource.img"

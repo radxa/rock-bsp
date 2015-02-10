@@ -15,27 +15,31 @@
 include $(CURDIR)/.config
 
 OUTPUT_DIR=$(CURDIR)/output
-LINUX_SRC=$(BOARD)/$(KERNEL)
-export UBOOT_SRC=$(CURDIR)/$(BOARD)/$(UBOOT)
-RAMDISK=$(CURDIR)/rockdev/ramdisk
-INITRD=$(RAMDISK)/initrd
+LINUX_SRC=$(CURDIR)/$(BOARD)/$(KERNEL)
+UBOOT_SRC=$(CURDIR)/$(BOARD)/$(UBOOT)
+TOOLS_DIR=$(CURDIR)/tools
+TOOLS_INSTALL=$(CURDIR)/tools
+INITRD_DIR=$(CURDIR)/$(BOARD)/initrd
+ROCKDEV_DIR=$(CURDIR)/$(BOARD)/rockdev
 K_O_PATH=$(OUTPUT_DIR)/$(BOARD)/$(BOARD)-linux
-export U_O_PATH=$(OUTPUT_DIR)/$(BOARD)/$(BOARD)-uboot
+U_O_PATH=$(OUTPUT_DIR)/$(BOARD)/$(BOARD)-uboot
 U_CONFIG_H=$(UBOOT_SRC)/include/config.h
 K_BLD_CONFIG=$(LINUX_SRC)/.config
 
-CROSS_COMPILE=$(CURDIR)/available-tools/arm-eabi-4.6/bin/arm-eabi-
+export LINUX_SRC UBOOT_SRC U_O_PATH ROCKDEV INITRD_DIR
+
+CROSS_COMPILE=$(CURDIR)/tools/toolchain/arm-eabi-4.6/bin/arm-eabi-
 #J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l` \* 2)
 J=12
 Q=@
 
 #all: attention kernel tools rootfs uboot ramdisk mkbootimg linux-pack
-all: rootfs tools toolchain ramdisk kernel uboot linux-pack
+all: tools toolchain ramdisk kernel uboot linux-pack
 
 $(LINUX_SRC)/.git:
 	$(Q)mkdir -p $(LINUX_SRC)
 	$(Q)git clone -n $(KERNEL_REPO) $(LINUX_SRC)
-	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV)
+	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null
 
 $(K_BLD_CONFIG): $(LINUX_SRC)/.git
 	$(Q)mkdir -p $(K_O_PATH)/modules
@@ -43,8 +47,8 @@ $(K_BLD_CONFIG): $(LINUX_SRC)/.git
 
 kernel: $(K_BLD_CONFIG)
 	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm oldconfig
-	$(Q)$(MAKE) -C $(LINUX_SRC) $(MAKE_ARG) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
-	$(Q)$(MAKE) -C $(LINUX_SRC) $(MAKE_ARG) ARCH=arm CROSS_COMPILE=$(CROSS_COMPILE) -j$J
+	$(Q)$(MAKE) -C $(LINUX_SRC) $(KERNEL_TARGET) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
+#	$(Q)$(MAKE) -C $(LINUX_SRC) $(MAKE_ARG) ARCH=arm CROSS_COMPILE=$(CROSS_COMPILE) -j$J
 
 linux-config: $(K_BLD_CONFIG)
 	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm menuconfig
@@ -55,7 +59,7 @@ rootfs: tools
 $(UBOOT_SRC)/.git:
 	$(Q)mkdir -p $(UBOOT_SRC)
 	$(Q)git clone -n $(UBOOT_REPO) $(UBOOT_SRC)
-	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV)
+	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV) && cd - > /dev/null
 
 $(U_CONFIG_H): $(UBOOT_SRC)/.git
 	$(Q)mkdir -p $(K_O_PATH)
@@ -65,46 +69,47 @@ $(U_CONFIG_H): $(UBOOT_SRC)/.git
 uboot: $(U_CONFIG_H)
 	$(Q)$(MAKE) -C $(UBOOT_SRC) all CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
 
-$(INITRD)/.git:
-	$(Q)mkdir -p $(INITRD)
-	$(Q)git clone $(RAMDISK_REPO) $(INITRD)
-	$(Q)$(MAKE) -C $(INITRD)
+$(INITRD_DIR)/.git:
+	$(Q)mkdir -p $(INITRD_DIR)
+	$(Q)git clone $(INITRD_REPO) $(INITRD_DIR)
+	$(Q)$(MAKE) -C $(INITRD_DIR)
 
 #initrd.img
-ramdisk: $(INITRD)/.git
+ramdisk: $(INITRD_DIR)/.git
 
-$(RAMDISK)/rockchip-mkbootimg/.git:
-	$(Q)mkdir -p $(RAMDISK)/rockchip-mkbootimg
-	$(Q)git clone $(MKBOOTIMG_REPO) $(RAMDISK)/rockchip-mkbootimg
-	$(Q)$(MAKE) -C $(RAMDISK)/rockchip-mkbootimg
-	$(Q)$(MAKE) -C $(RAMDISK)/rockchip-mkbootimg install
+tools/rockchip-mkbootimg/.git:
+	$(Q)mkdir -p $(TOOLS_DIR)/rockchip-mkbootimg
+	$(Q)git clone $(MKBOOTIMG_REPO) $(TOOLS_DIR)/rockchip-mkbootimg
+	$(Q)$(MAKE) -C $(TOOLS_DIR)/rockchip-mkbootimg install PREFIX=$(TOOLS_INSTALL)
 
-#tools
-tools: $(RAMDISK)/rockchip-mkbootimg/.git
+tools/rkflashtool/.git:
+	$(Q)mkdir -p $(TOOLS_DIR)/rkflashtool
+	$(Q)git clone $(RKFLASHTOOL_REPO) $(TOOLS_DIR)/rkflashtool
+	$(Q)$(MAKE) -C $(TOOLS_DIR)/rkflashtool install PREFIX=$(TOOLS_INSTALL)
 
-available-tools/arm-eabi-4.6/.git:
-	$(Q)scripts/toolchain.sh
+tools/toolchain/arm-eabi-4.6/.git:
+	$(Q)scripts/rock_tools.sh
 
-#toolchain
-toolchain: available-tools/arm-eabi-4.6/.git
+#rock tools
+tools: tools/toolchain/arm-eabi-4.6/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
 
 #linux-pack: tools mkbootimg ramdisk rootfs kernel uboot
 linux-pack:
-	$(Q)scripts/$(BOARD)_mkupdateimg.sh
+	$(Q)scripts/$(BOARD)_buildimg.sh
 
 update:
-	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV)
-	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV)
+	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null
+	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV) && cd - > /dev/null
 
 distclean:
-	rm -rf $(OUTPUT_DIR)/*
-	rm $(CURDIR)/.config
+	$(Q)$(MAKE) -C $(LINUX_SRC) distclean
+	$(Q)$(MAKE) -C $(UBOOT_SRC) distclean
 clean:
-	$(Q)$(MAKE) -C $(K_O_PATH) clean
-	$(Q)$(MAKE) -C $(U_O_PATH) clean
+	$(Q)$(MAKE) -C $(LINUX_SRC) clean
+	$(Q)$(MAKE) -C $(UBOOT_SRC) clean
 mrproper:
-	$(Q)$(MAKE) -C $(K_O_PATH) mrproper
-	$(Q)$(MAKE) -C $(U_O_PATH) mrproper
+	$(Q)$(MAKE) -C $(LINUX_SRC) mrproper
+	$(Q)$(MAKE) -C $(UBOOT_SRC) mrproper
 
 help:
 	@echo ""

@@ -9,11 +9,11 @@
 # option) any later version.
 
 TOP=$(pwd)
-echo "---------------$output"
+. $TOP/.config
+
 TARGET=$TOP/rootfs/target_tmp
-OUT_DIR=$TOP/rootfs
-IMAGE=$OUT_DIR/rootfs.tar.gz
-LINARO=linaro-trusty-alip-20141024-684.tar.gz
+OUT_DIR=$TOP/rootfs/$BOARD-rootfs
+IMAGE=$OUT_DIR/$BOARD-rootfs.tar.gz
 
 cleanup() {
 	sudo umount $TARGET || true
@@ -28,10 +28,10 @@ die() {
 
 init() {
 	if [ ! -e "$IMAGE" ]; then
-		wget -P $OUT_DIR http://releases.linaro.org/14.10/ubuntu/trusty-images/alip/linaro-trusty-alip-20141024-684.tar.gz
-		mv $OUT_DIR/$LINARO $OUT_DIR/rootfs.tar.gz
+		wget -P $OUT_DIR $ROOTFS_URL
+		mv $OUT_DIR/*.tar.gz $OUT_DIR/$BOARD-rootfs.tar.gz
 	fi
-	if [ ! -e $OUT_DIR/rootfs.ext4 ]; then
+	if [ ! -e "$OUT_DIR/rootfs.ext4" ]; then
 		make_rootfs "$IMAGE" "$OUT_DIR"
 	fi
 }

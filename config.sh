@@ -32,7 +32,7 @@ if [ $# -eq 0 ];then
 	usage
 elif [ -e "configs/$1_config" ];then
 	cat configs/$1_config > .config
-	cat configs/tools_defconfig >> .config
+	cat configs/defconfig >> .config
 
 	echo "$1 configured. Now run \`make\`"
 else

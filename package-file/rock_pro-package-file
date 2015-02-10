@@ -5,5 +5,5 @@ package-file	package-file
 bootloader	RK3188Loader(L)_V2.19.bin
 parameter	parameter
 boot		Image/boot-linux.img
-linuxroot	../rootfs/rootfs.ext4
+linuxroot	Image/rootfs.ext4
 backup		RESERVED

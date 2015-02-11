@@ -21,8 +21,6 @@ TOOLS_DIR=$(CURDIR)/tools
 TOOLS_INSTALL=$(CURDIR)/tools
 INITRD_DIR=$(CURDIR)/$(BOARD)/initrd
 ROCKDEV_DIR=$(CURDIR)/$(BOARD)/rockdev
-K_O_PATH=$(OUTPUT_DIR)/$(BOARD)/$(BOARD)-linux
-U_O_PATH=$(OUTPUT_DIR)/$(BOARD)/$(BOARD)-uboot
 U_CONFIG_H=$(UBOOT_SRC)/include/config.h
 K_BLD_CONFIG=$(LINUX_SRC)/.config
 
@@ -42,7 +40,7 @@ $(LINUX_SRC)/.git:
 	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null
 
 $(K_BLD_CONFIG): $(LINUX_SRC)/.git
-	$(Q)mkdir -p $(K_O_PATH)/modules
+	$(Q)mkdir -p $(LINUX_SRC)/modules
 	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm $(KERNEL_DEFCONFIG)
 
 kernel: $(K_BLD_CONFIG)
@@ -62,7 +60,7 @@ $(UBOOT_SRC)/.git:
 	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV) && cd - > /dev/null
 
 $(U_CONFIG_H): $(UBOOT_SRC)/.git
-	$(Q)mkdir -p $(K_O_PATH)
+	$(Q)mkdir -p $(UBOOT_SRC)
 	$(Q)$(MAKE) -C $(UBOOT_SRC) mrproper
 	$(Q)$(MAKE) -C $(UBOOT_SRC) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm $(UBOOT_DEFCONFIG)
 
@@ -95,7 +93,7 @@ tools: tools/toolchain/arm-eabi-4.6/.git tools/rockchip-mkbootimg/.git tools/rkf
 
 #linux-pack: tools mkbootimg ramdisk rootfs kernel uboot
 linux-pack:
-	$(Q)scripts/$(BOARD)_buildimg.sh
+	$(Q)scripts/buildimg.sh
 
 update:
 	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null

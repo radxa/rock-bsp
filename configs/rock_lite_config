@@ -1,6 +1,5 @@
 #board name
-BOARD=rock_pro
-SERIAL=rk31
+BOARD=rock-lite
 
 #configuration for u-boot
 UBOOT_REPO="git://x1/linux/u-boot-rockchip.git"
@@ -20,9 +19,3 @@ PARAMETER="rock_parameter"
 
 #package-fil
 PACKAGE_FILE="package-file"
-
-#rootfs URL
-ROOTFS_SRC="http://releases.linaro.org/14.10/ubuntu/trusty-images/alip/linaro-trusty-alip-20141024-684.tar.gz"
-
-#linux-boot.img args
-BOOTIMG_TARGET=

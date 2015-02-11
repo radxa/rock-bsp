@@ -11,12 +11,6 @@ ROOTFS_DST=${ROCKDEV_DIR}/Image
 ROOTFS_SRC=rootfs/$BOARD-rootfs
 ROOTFS_BIN=
 
-show_usage()
-{
-	echo "Usage ($1): $1 does not exit!"
-	exit 1
-}
-
 function init()
 {
 	if [ "$U_BOOT_BIN"x = ""x  ]; then
@@ -30,11 +24,8 @@ function init()
 	if [ "$old_uboot" != "$U_BOOT_BIN" ]; then
 		sed -i 's/'${old_uboot}'/'${U_BOOT_BIN}'/g' $TOP/${BOARD}/rockdev/package-file
 	fi
-
-	[ -e "${ROOTFS_DST}/rootfs.ext4" ] || show_usage "rootfs.ext4"
-	[ -e "${ROOTFS_DST}/boot-linux.img" ] || show_usage "boot-linux.img"
-
 }
+
 function pack()
 {
 	echo "start to make update.img..."
@@ -43,6 +34,7 @@ function pack()
 	img_maker -$SERIAL ${U_BOOT_BIN} 1 0 0 update_tmp.img ${IMAGE}
 	echo -e "Image is at \033[1;36m$TOP/rockdev/${IMAGE}\033[00m"
 }
+
 function clean()
 {
 	if [ `ls *.img | wc -l` -gt 5 ]; then

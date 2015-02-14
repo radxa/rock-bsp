@@ -1,6 +1,0 @@
-#initrd
-RAMDISK_REPO="https://github.com/radxa/initrd.git"
-MKBOOTIMG_REPO="https://github.com/neo-technologies/rockchip-mkbootimg.git"
-
-#tools
-TOOLS_REPO="git://x1/rockchip/rk/RKTools.git"

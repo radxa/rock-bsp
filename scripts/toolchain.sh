@@ -1,17 +1,17 @@
 #!/bin/sh -e
 
-TOP=$(pwd)
 OS_FLG=$(uname -m | cut -d "_" -f 2)
+TOOLCHAIN_DIR="tools/toolchain/arm-eabi"
 
-if [ ! -d "$TOP/available-tools" ]; then
-	mkdir -p $TOP/available-tools
+if [ ! -d "tools/toolchain" ]; then
+	mkdir -p tools/toolchain
 fi
 
-if [ ! -d "$TOP/available-tools/arm-eabi-4.6" ]; then
+if [ ! -d "tools/toolchain/arm-eabi" ]; then
 	if [ $OS_FLG -eq 32 ]; then
-		git clone -b jb-release --depth 1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6 $TOP/available-tools/arm-eabi-4.6
+		git clone -b $TOOLCHAIN32_REV --depth 1 $TOOLCHAIN32_REPO $TOOLCHAIN_DIR
 	elif [ $OS_FLG -eq 64 ]; then
-		git clone -b kitkat-release --depth 1 https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6 $TOP/available-tools/arm-eabi-4.6
+		git clone -b $TOOLCHAIN64_REV --depth 1 $TOOLCHAIN64_REPO $TOOLCHAIN_DIR
 	else
 		echo "unknown system type"
 	fi

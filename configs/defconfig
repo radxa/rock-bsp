@@ -4,3 +4,10 @@ MKBOOTIMG_REPO="https://github.com/neo-technologies/rockchip-mkbootimg.git"
 RKFLASHTOOL_REPO="https://github.com/linux-rockchip/rkflashtool.git"
 
 INITRD_REPO="https://github.com/radxa/initrd.git"
+
+#toolchain
+TOOLCHAIN32_REPO="https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6"
+TOOLCHAIN32_REV=jb-release
+
+TOOLCHAIN64_REPO="https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6"
+TOOLCHAIN64_REV=kitkat-release

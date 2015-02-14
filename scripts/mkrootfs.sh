@@ -8,12 +8,17 @@
 # Free Software Foundation; either version 2 of the License, or (at your
 # option) any later version.
 
-TOP=$(pwd)
-. $TOP/.config
+die() {
+	echo "$*" >&2
+	exit 1
+}
 
-TARGET=$TOP/rootfs/target_tmp
-OUT_DIR=$TOP/rootfs/$BOARD-rootfs
-IMAGE=$OUT_DIR/$BOARD-rootfs.tar.gz
+[ -s "./.config" ] || die "please run ./config.sh first."
+
+. ./.config
+
+TARGET=rootfs/target_tmp
+OUT_DIR=rootfs/$BOARD-rootfs
 
 cleanup() {
 	sudo umount $TARGET || true
@@ -26,22 +31,12 @@ die() {
 	exit 1
 }
 
-init() {
-	if [ ! -e "$IMAGE" ]; then
-		wget -P $OUT_DIR $ROOTFS_URL
-		mv $OUT_DIR/*.tar.gz $OUT_DIR/$BOARD-rootfs.tar.gz
-	fi
-	if [ ! -e "$OUT_DIR/rootfs.ext4" ]; then
-		make_rootfs "$IMAGE" "$OUT_DIR"
-	fi
-}
-
 make_rootfs()
 {
 	echo "Make rootfs"
 	local rootfs=$(readlink -f "$1")
 	local output=$(readlink -f "$2")
-	local fsizeinbytes=$(gzip -lq "$IMAGE" | awk -F" " '{print $2}')
+	local fsizeinbytes=$(gzip -lq "$IMAGEPACK_SRC" | awk -F" " '{print $2}')
 	local fsizeMB=$(expr $fsizeinbytes / 1024 / 1024 + 200)
 	local d= x=
 	local rootfs_copied=
@@ -73,5 +68,5 @@ make_rootfs()
 
 	cd - > /dev/null
 }
-init
+make_rootfs
 cleanup

@@ -10,48 +10,49 @@
 
 .PHONY: all clean help
 .PHONY: tools ramdisk toolchain
-.PHONY: uboot kernel rootfs linux-pack
+.PHONY: uboot kernel nand.img emmc.img sdcard.img rootfs
 
-include $(CURDIR)/.config
+include .config
 
-OUTPUT_DIR=$(CURDIR)/output
-LINUX_SRC=$(CURDIR)/$(BOARD)/$(KERNEL)
+OUTPUT_DIR=$(CURDIR)/output/$(BOARD)-modules
+KERNEL_SRC=$(CURDIR)/$(BOARD)/$(KERNEL)
 UBOOT_SRC=$(CURDIR)/$(BOARD)/$(UBOOT)
 TOOLS_DIR=$(CURDIR)/tools
 TOOLS_INSTALL=$(CURDIR)/tools
 INITRD_DIR=$(CURDIR)/$(BOARD)/initrd
 ROCKDEV_DIR=$(CURDIR)/$(BOARD)/rockdev
 U_CONFIG_H=$(UBOOT_SRC)/include/config.h
-K_BLD_CONFIG=$(LINUX_SRC)/.config
+K_BLD_CONFIG=$(KERNEL_SRC)/.config
 
-export LINUX_SRC UBOOT_SRC U_O_PATH ROCKDEV INITRD_DIR
+export KERNEL_SRC UBOOT_SRC OUTPUT_DIR ROCKDEV_DIR INITRD_DIR
 
-CROSS_COMPILE=$(CURDIR)/tools/toolchain/arm-eabi-4.6/bin/arm-eabi-
+CROSS_COMPILE=$(CURDIR)/tools/toolchain/arm-eabi/bin/arm-eabi-
 #J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l` \* 2)
 J=12
 Q=@
 
 #all: attention kernel tools rootfs uboot ramdisk mkbootimg linux-pack
-all: tools toolchain ramdisk kernel uboot linux-pack
+all: tools toolchain ramdisk kernel uboot
 
-$(LINUX_SRC)/.git:
-	$(Q)mkdir -p $(LINUX_SRC)
-	$(Q)git clone -n $(KERNEL_REPO) $(LINUX_SRC)
-	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null
+$(KERNEL_SRC)/.git:
+	$(Q)mkdir -p $(KERNEL_SRC)
+	$(Q)git clone -n $(KERNEL_REPO) $(KERNEL_SRC)
+	$(Q)cd $(KERNEL_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null
 
-$(K_BLD_CONFIG): $(LINUX_SRC)/.git
-	$(Q)mkdir -p $(LINUX_SRC)/modules
-	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm $(KERNEL_DEFCONFIG)
+$(K_BLD_CONFIG): $(KERNEL_SRC)/.git
+	$(Q)mkdir -p $(KERNEL_SRC)/modules
+	$(Q)$(MAKE) -C $(KERNEL_SRC) ARCH=arm $(KERNEL_DEFCONFIG)
 
 kernel: $(K_BLD_CONFIG)
-	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm oldconfig
-	$(Q)$(MAKE) -C $(LINUX_SRC) $(KERNEL_TARGET) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
-#	$(Q)$(MAKE) -C $(LINUX_SRC) $(MAKE_ARG) ARCH=arm CROSS_COMPILE=$(CROSS_COMPILE) -j$J
+	$(Q)$(MAKE) -C $(KERNEL_SRC) ARCH=arm oldconfig
+	$(Q)$(MAKE) -C $(KERNEL_SRC) $(KERNEL_TARGET) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm -j$J
+	$(Q)$(MAKE) -C $(KERNEL_SRC) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm INSTALL_MOD_PATH=$(OUTPUT_DIR) modules
+	$(Q)$(MAKE) -C $(KERNEL_SRC) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm INSTALL_MOD_PATH=$(OUTPUT_DIR) modules_install
 
 linux-config: $(K_BLD_CONFIG)
-	$(Q)$(MAKE) -C $(LINUX_SRC) ARCH=arm menuconfig
+	$(Q)$(MAKE) -C $(KERNEL_SRC) ARCH=arm menuconfig
 
-rootfs: tools
+rootfs:
 	$(Q)scripts/mkrootfs.sh
 
 $(UBOOT_SRC)/.git:
@@ -85,28 +86,30 @@ tools/rkflashtool/.git:
 	$(Q)git clone $(RKFLASHTOOL_REPO) $(TOOLS_DIR)/rkflashtool
 	$(Q)$(MAKE) -C $(TOOLS_DIR)/rkflashtool install PREFIX=$(TOOLS_INSTALL)
 
-tools/toolchain/arm-eabi-4.6/.git:
-	$(Q)scripts/rock_tools.sh
+tools/toolchain/arm-eabi:
+	$(Q)scripts/toolchain.sh
 
 #rock tools
-tools: tools/toolchain/arm-eabi-4.6/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
+tools: tools/toolchain/arm-eabi tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
 
-#linux-pack: tools mkbootimg ramdisk rootfs kernel uboot
-linux-pack:
+nand.img emmc.img: tools ramdisk kernel uboot
 	$(Q)scripts/buildimg.sh
 
+sdcard.img : tools ramdisk kernel uboot
+	$(Q)scripts/hwpack.sh
+
 update:
-	$(Q)cd $(LINUX_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null
+	$(Q)cd $(KERNEL_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null
 	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV) && cd - > /dev/null
 
 distclean:
-	$(Q)$(MAKE) -C $(LINUX_SRC) distclean
+	$(Q)$(MAKE) -C $(KERNEL_SRC) distclean
 	$(Q)$(MAKE) -C $(UBOOT_SRC) distclean
 clean:
-	$(Q)$(MAKE) -C $(LINUX_SRC) clean
+	$(Q)$(MAKE) -C $(KERNEL_SRC) clean
 	$(Q)$(MAKE) -C $(UBOOT_SRC) clean
 mrproper:
-	$(Q)$(MAKE) -C $(LINUX_SRC) mrproper
+	$(Q)$(MAKE) -C $(KERNEL_SRC) mrproper
 	$(Q)$(MAKE) -C $(UBOOT_SRC) mrproper
 
 help:

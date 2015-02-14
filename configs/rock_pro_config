@@ -13,16 +13,19 @@ KERNEL_REPO="git://x1/linux/linux-rockchip.git"
 KERNEL_REV=radxa-stable-3.0
 KERNEL_DEFCONFIG=radxa_rock_linux_defconfig
 KERNEL=linux-rockchip
-MAKE_ARG=
+KERNEL_TARGET=
+
+#initrd
+INITRD_REPO="https://github.com/radxa/initrd.git"
 
 #parameter
-PARAMETER="rock_parameter"
+PARAMETER="parameter"
 
 #package-fil
 PACKAGE_FILE="package-file"
 
 #rootfs URL
-ROOTFS_SRC="http://releases.linaro.org/14.10/ubuntu/trusty-images/alip/linaro-trusty-alip-20141024-684.tar.gz"
+ROOTFS_URL="http://releases.linaro.org/14.10/ubuntu/trusty-images/alip/linaro-trusty-alip-20141024-684.tar.gz"
 
 #linux-boot.img args
-BOOTIMG_TARGET=
+BOOTIMG_TARGET=""

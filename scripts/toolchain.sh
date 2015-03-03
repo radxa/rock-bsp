@@ -9,7 +9,7 @@ die() {
 
 . ./.config
 
-OS_FLG=$(uname -m | cut -d "_" -f 2)
+OS_FIGURE=$(uname -m | cut -d "_" -f 2)
 TOOLCHAIN_DIR="tools/toolchain"
 
 if [ ! -d "$TOOLCHAIN_DIR" ]; then
@@ -17,9 +17,9 @@ if [ ! -d "$TOOLCHAIN_DIR" ]; then
 fi
 
 if [ ! -d "tools/toolchain/arm-eabi" ]; then
-	if [ $OS_FLG -eq 32 ]; then
+	if [ $OS_FIGURE -eq 32 ]; then
 		git clone -b $TOOLCHAIN32_REV --depth 1 $TOOLCHAIN32_REPO $TOOLCHAIN_DIR
-	elif [ $OS_FLG -eq 64 ]; then
+	elif [ $OS_OS_FIGURE= -eq 64 ]; then
 		git clone -b $TOOLCHAIN64_REV --depth 1 $TOOLCHAIN64_REPO $TOOLCHAIN_DIR
 	else
 		echo "unknown system type"

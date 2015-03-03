@@ -1,10 +1,19 @@
 #!/bin/sh -e
 
-OS_FLG=$(uname -m | cut -d "_" -f 2)
-TOOLCHAIN_DIR="tools/toolchain/arm-eabi"
+die() {
+	echo "$*" >&2
+	exit 1
+}
 
-if [ ! -d "tools/toolchain" ]; then
-	mkdir -p tools/toolchain
+[ -s "./.config" ] || die "please run ./config.sh first."
+
+. ./.config
+
+OS_FLG=$(uname -m | cut -d "_" -f 2)
+TOOLCHAIN_DIR="tools/toolchain"
+
+if [ ! -d "$TOOLCHAIN_DIR" ]; then
+	mkdir -p $TOOLCHAIN_DIR
 fi
 
 if [ ! -d "tools/toolchain/arm-eabi" ]; then

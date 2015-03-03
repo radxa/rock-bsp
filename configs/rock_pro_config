@@ -1,6 +1,6 @@
 #board name
 BOARD=rock_pro
-SERIAL=rk31
+TYPECHIP=rk31
 
 #configuration for u-boot
 UBOOT_REPO="git://x1/linux/u-boot-rockchip.git"

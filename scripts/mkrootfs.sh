@@ -19,6 +19,7 @@ die() {
 
 TARGET=rootfs/target_tmp
 OUT_DIR=rootfs/$BOARD-rootfs
+ROOTFS="$(basename $OUT_DIR/*.tar.gz)"
 
 cleanup() {
 	sudo umount $TARGET || true
@@ -36,7 +37,7 @@ make_rootfs()
 	echo "Make rootfs"
 	local rootfs=$(readlink -f "$1")
 	local output=$(readlink -f "$2")
-	local fsizeinbytes=$(gzip -lq "$IMAGEPACK_SRC" | awk -F" " '{print $2}')
+	local fsizeinbytes=$(gzip -lq "$rootfs" | awk -F" " '{print $2}')
 	local fsizeMB=$(expr $fsizeinbytes / 1024 / 1024 + 200)
 	local d= x=
 	local rootfs_copied=
@@ -68,5 +69,5 @@ make_rootfs()
 
 	cd - > /dev/null
 }
-make_rootfs
+make_rootfs "$OUT_DIR/$ROOTFS" "$OUT_DIR"
 cleanup

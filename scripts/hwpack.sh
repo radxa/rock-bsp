@@ -12,8 +12,8 @@ die() {
 HWPACK_DIR="${BOARD}/rockdev/${BOARD}_hwpack"
 ROCKDEV_DIR="${BOARD}/rockdev"
 OUT_DIR=rootfs/$BOARD-rootfs
-IMAGE_NAME=
 IMAEGPACK_SRC=$OUT_DIR/$IMAGE_NAME
+IMAGE_NAME=
 
 init() {
 	if [ ! -d "$OUT_DIR" ]; then
@@ -39,7 +39,7 @@ cp_debian_files() {
 	rm -rf "rootfs/${BOARD}-rootfs/binary"
 
 	## kernel modules
-	cp -r "$OUTPUT_DIR/lib/modules" "$rootfs_pack/lib/"
+	cp -r "$MODULE_DIR/lib/modules" "$rootfs_pack/lib/"
 	rm -f "$rootfs_pack/lib/modules"/*/source
 	rm -f "$rootfs_pack/lib/modules"/*/build
 }
@@ -67,7 +67,7 @@ create_hwpack() {
 	## bootloader
 	mkdir -p "$bootloader_hwpack"
 	cp -r "$UBOOT_SRC/"*.bin "$bootloader_hwpack/"
-	cp -r "$UBOOT_SRC/"*.img "$bootloader_hwpack/" 1> /dev/null
+	[ -s "$UBOOT_SRC/uboot.img" ] || cp -r "$UBOOT_SRC/".img "$bootloader_hwpack/" 1> /dev/null
 
 	## compress hwpack
 	cd "$HWPACK_DIR"

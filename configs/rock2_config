@@ -1,6 +1,6 @@
 #board name
 BOARD=rock2
-SERIAL=rk32
+TYPECHIP=rk32
 
 #configuration for u-boot
 UBOOT_REPO="git@x1:/rockchip/rk/u-boot"

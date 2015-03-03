@@ -20,8 +20,9 @@ U_BOOT_BIN=
 function init()
 {
 	rm -f "$ROCKDEV_DIR/"*.img "$ROCKDEV_DIR/"*.bin
-	cp -v "${UBOOT_SRC}/"*.bin $ROCKDEV_DIR
-	cp -v "${UBOOT_SRC}/"*.img $ROCKDEV_DIR
+	[ ! -s "${UBOOT_SRC}/RK3188Loader_miniall.bin" ] || cp -v "${UBOOT_SRC}/"RK3188Loader_miniall.bin $ROCKDEV_DIR
+	[ ! -s "${UBOOT_SRC}/uboot.img" ] || cp -v "${UBOOT_SRC}/"uboot.img $ROCKDEV_DIR
+	[ ! -s "${UBOOT_SRC}/RK3288UbootLoader_V2.19.06.bin" ] || cp -v "${UBOOT_SRC}/"RK3288UbootLoader_V2.19.06.bin $ROCKDEV_DIR
 	if [ ! -e "$ROOTFS_DST/rootfs.ext4" ]; then
 		if [ -e "$ROOTFS_SRC/$BOARD-rootfs.ext4" ]; then
 			cp $ROOTFS_SRC/$BOARD-rootfs.ext4 $ROOTFS_DST/rootfs.ext4
@@ -36,9 +37,12 @@ function pack()
 {
 	echo "start to make update.img..."
 	cd ${ROCKDEV_DIR}
+	if [ "$U_BOOT_BIN"x = ""x  ]; then
+		U_BOOT_BIN="$(basename RK3*.bin)"
+	fi
 	rm -rf update_tmp.img
 	$TOOLS_DIR/afptool -pack ./ update_tmp.img
-	$TOOLS_DIR/img_maker -$SERIAL ${U_BOOT_BIN} 1 0 0 update_tmp.img ${IMAGE}
+	$TOOLS_DIR/img_maker -${TYPECHIP} ${U_BOOT_BIN} 1 0 0 update_tmp.img ${IMAGE}
 	echo -e "Image is at \033[1;36m${ROCKDEV_DIR}/${IMAGE}\033[00m"
 	cd - > /dev/null
 }

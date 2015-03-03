@@ -9,7 +9,7 @@
 #
 
 .PHONY: all clean help
-.PHONY: tools ramdisk
+.PHONY: tools ramdisk boot.img
 .PHONY: uboot kernel nand.img emmc.img sdcard.img rootfs.ext4
 
 include .config
@@ -100,8 +100,17 @@ tools/toolchain/arm-eabi/.git:
 #rock tools
 tools: tools/toolchain/arm-eabi/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
 
+boot.img: tools kernel ramdisk
+	$(Q)mkdir -p $(BOARD)/rockdev/Image
+	$(Q)rm -f $(BOARD)/rockdev/Image/boot-linux.img
+	$(Q)cd $(BOARD)/rockdev
+	$(Q)$(TOOLS_DIR)/bin/mkbootimg --kernel $(KERNEL_SRC)/arch/arm/boot/zImage --ramdisk $(INITRD_DIR)/../initrd.img --second $(KERNEL_SRC)/$(BOOTIMG_TARGET) -o $(BOARD)/rockdev/Image/boot-linux.img
+	$(Q)cd - > /dev/null
+	$(Q)rm -rf rockdev
+	$(Q)ln -s $(BOARD)/rockdev rockdev
+
 nand.img emmc.img: tools ramdisk kernel uboot
-	$(Q)scripts/buildimg.sh
+	$(Q)scripts/mkupdate.sh
 
 sdcard.img : tools ramdisk kernel uboot
 	$(Q)scripts/hwpack.sh
@@ -141,7 +150,7 @@ help:
 	@echo "  make	rootfs.ext4	- prepare rootfs.img"
 	@echo ""
 	@echo "Packages:"
-	@echo "  make	mkbootimg	- prepare linux-boot.img"
+	@echo "  make	boot.img	- prepare linux-boot.img"
 	@echo "  make	linux-pack	- generate update.img"
 	@echo ""
 	@echo "  make	clean		- delete some useless files"

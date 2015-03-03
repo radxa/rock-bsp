@@ -31,6 +31,8 @@ function init()
 			exit 1
 		fi
 	fi
+	cat parameter/$BOARD-parameter > $BOARD/rockdev/parameter
+	cat package-file/$BOARD-package-file > $BOARD/rockdev/package-file
 }
 
 function pack()

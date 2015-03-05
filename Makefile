@@ -29,11 +29,11 @@ K_BLD_CONFIG=$(KERNEL_SRC)/.config
 export TOOLS_DIR ROCKDEV_DIR MODULE_DIR
 export KERNEL_SRC UBOOT_SRC OUTPUT_DIR INITRD_DIR
 
-CROSS_COMPILE=$(CURDIR)/tools/toolchain/bin/arm-eabi-
-OS_FIGURE:=$(shell uname -m | cut -d "_" -f 2)
+CROSS_COMPILE=$(TOOLCHAIN_DIR)/bin/arm-eabi-
+HOST_ARCH:=$(shell uname -m )
 #J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l` \* 2)
 J=12
-Q=@
+Q=
 
 #all: kernel tools rootfs uboot ramdisk mkbootimg linux-pack
 all: tools ramdisk kernel uboot
@@ -96,13 +96,13 @@ tools/rkflashtool/.git:
 	$(Q)git clone $(RKFLASHTOOL_REPO) $(TOOLS_DIR)/rkflashtool
 	$(Q)$(MAKE) -C $(TOOLS_DIR)/rkflashtool install PREFIX=$(TOOLS_INSTALL)
 
-tools/toolchain/arm-eabi/.git:
+tools/toolchain/.git:
 	$(Q)mkdir -p $(TOOLCHAIN_DIR)
-	$(Q)git clone -b $(TOOLCHAIN$(OS_FIGURE)_REV) --depth 1 $(TOOLCHAIN$(OS_FIGURE)_REPO) $(TOOLCHAIN_DIR)
-#	$(Q)scripts/toolchain.sh
+	$(Q)git clone -n --depth 1 $(TOOLCHAIN_REPO_$(HOST_ARCH)) $(TOOLCHAIN_DIR)
+	$(Q)cd $(TOOLCHAIN_DIR) && git checkout $(TOOLCHAIN_REV_$(HOST_ARCH)) && cd - > /dev/null
 
 #rock tools
-tools: tools/toolchain/arm-eabi/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
+tools: tools/toolchain/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
 
 boot.img: tools kernel ramdisk
 	$(Q)mkdir -p $(BOARD)/rockdev/Image

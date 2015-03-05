@@ -19,6 +19,7 @@ MODULE_DIR=$(OUTPUT_DIR)/$(BOARD)-modules
 KERNEL_SRC=$(CURDIR)/$(BOARD)/$(KERNEL)
 UBOOT_SRC=$(CURDIR)/$(BOARD)/$(UBOOT)
 TOOLS_DIR=$(CURDIR)/tools
+TOOLCHAIN_DIR=$(TOOLS_DIR)/toolchain
 TOOLS_INSTALL=$(CURDIR)/tools
 INITRD_DIR=$(CURDIR)/$(BOARD)/initrd
 ROCKDEV_DIR=$(CURDIR)/$(BOARD)/rockdev
@@ -29,6 +30,7 @@ export TOOLS_DIR ROCKDEV_DIR MODULE_DIR
 export KERNEL_SRC UBOOT_SRC OUTPUT_DIR INITRD_DIR
 
 CROSS_COMPILE=$(CURDIR)/tools/toolchain/bin/arm-eabi-
+OS_FIGURE:=$(shell uname -m | cut -d "_" -f 2)
 #J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l` \* 2)
 J=12
 Q=@
@@ -95,7 +97,9 @@ tools/rkflashtool/.git:
 	$(Q)$(MAKE) -C $(TOOLS_DIR)/rkflashtool install PREFIX=$(TOOLS_INSTALL)
 
 tools/toolchain/arm-eabi/.git:
-	$(Q)scripts/toolchain.sh
+	$(Q)mkdir -p $(TOOLCHAIN_DIR)
+	$(Q)git clone -b $(TOOLCHAIN$(OS_FIGURE)_REV) --depth 1 $(TOOLCHAIN$(OS_FIGURE)_REPO) $(TOOLCHAIN_DIR)
+#	$(Q)scripts/toolchain.sh
 
 #rock tools
 tools: tools/toolchain/arm-eabi/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
@@ -104,12 +108,16 @@ boot.img: tools kernel ramdisk
 	$(Q)mkdir -p $(BOARD)/rockdev/Image
 	$(Q)rm -f $(BOARD)/rockdev/Image/boot-linux.img
 	$(Q)cd $(BOARD)/rockdev
-	$(Q)$(TOOLS_DIR)/bin/mkbootimg --kernel $(KERNEL_SRC)/arch/arm/boot/zImage --ramdisk $(INITRD_DIR)/../initrd.img --second $(KERNEL_SRC)/$(BOOTIMG_TARGET) -o $(BOARD)/rockdev/Image/boot-linux.img
-	$(Q)cd - > /dev/null
+	$(Q)cp -v $(KERNEL_SRC)/arch/arm/boot/zImage $(BOARD)/rockdev
+	$(Q)cp -v $(INITRD_DIR)/../initrd.img $(BOARD)/rockdev
+ifneq ($(wildcard $(KERNEL_SRC)/resource.img),)
+	$(Q)cp -v $(KERNEL_SRC)/resource.img $(BOARD)/rockdev
+endif
+	$(Q)cd $(BOARD)/rockdev && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_TARGET) -o Image/boot-linux.img && cd - > /dev/null
 	$(Q)rm -rf rockdev
 	$(Q)ln -s $(BOARD)/rockdev rockdev
 
-nand.img emmc.img: tools ramdisk kernel uboot
+nand.img emmc.img: tools ramdisk kernel uboot boot.img
 	$(Q)scripts/mkupdate.sh
 
 sdcard.img : tools ramdisk kernel uboot

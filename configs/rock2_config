@@ -17,6 +17,7 @@ KERNEL_TARGET=rk3288-tb.img
 
 #initrd
 INITRD_REPO="https://github.com/radxa/initrd.git"
+INITRD_REV=master
 
 #parameter
 PARAMETER="parameter"

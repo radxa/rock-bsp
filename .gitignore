@@ -1,4 +1,3 @@
 .config
-tools/*
 output/*
 rootfs/*

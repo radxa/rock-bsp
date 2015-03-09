@@ -1,6 +1,7 @@
 #all tools
 MKBOOTIMG_REPO="https://github.com/neo-technologies/rockchip-mkbootimg.git"
 MKBOOTIMG_REV=master
+
 RKFLASHTOOL_REPO="https://github.com/linux-rockchip/rkflashtool.git"
 RKFLASHTOOL_REV=master
 

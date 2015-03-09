@@ -7,7 +7,7 @@ UBOOT_REPO="git@x1:/rockchip/rk/u-boot"
 UBOOT_REV=rkproduct
 UBOOT_DEFCONFIG=rk3288_defconfig
 UBOOT=u-boot-rock2
-UBOOT_EXTRA=""
+UBOOT_EXTRA=
 
 #configuration for linux kernel
 KERNEL_REPO="git://x1/rockchip/rk/kernel.git"

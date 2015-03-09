@@ -128,7 +128,7 @@ boot.img: tools kernel ramdisk
 ifneq ($(wildcard $(KERNEL_SRC)/resource.img),)
 	$(Q)cp -v $(KERNEL_SRC)/resource.img $(BOARD)/rockdev
 endif
-	$(Q)cd $(BOARD)/rockdev && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_TARGET) -o Image/boot-linux.img && cd - > /dev/null
+	$(Q)cd $(BOARD)/rockdev && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_SECOND) -o Image/boot-linux.img && cd - > /dev/null
 	$(Q)rm -rf rockdev
 	$(Q)ln -s $(BOARD)/rockdev rockdev
 

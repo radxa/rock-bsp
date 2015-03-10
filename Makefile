@@ -37,7 +37,8 @@ K_BLD_CONFIG=$(KERNEL_SRC)/.config
 U_BOOT_BIN=$(shell sed '/bootloader/!d' $(PACKAGE_FILE) | cut -f 2)
 PARAMETER=$(CURDIR)/parameter/$(BOARD)-parameter
 PACKAGE_FILE=$(CURDIR)/package-file/$(BOARD)-package-file
-IMAGE_NAME=$(BOARD)_$(DATE)
+GIT_REV=$(shell git rev-parse --short HEAD)
+IMAGE_NAME=$(BOARD)_$(BOARD_ROOTFS)_$(DATE)_$(GIT_REV)
 
 export PARAMETER PACKAGE_FILE U_BOOT_BIN
 

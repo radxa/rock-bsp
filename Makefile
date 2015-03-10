@@ -177,7 +177,6 @@ help:
 	@echo "  make	nand.img	- generate nand.img"
 	@echo "  make	emmc.img	- generate emmc.img"
 	@echo "  make	sdcard.img	- generate sdcard.img"
-	@echo "  make	linux-pack	- generate update.img"
 	@echo ""
 	@echo "  make	clean		- delete some compiled files"
 	@echo "  make	distclean	- reply to original state"

@@ -2,6 +2,9 @@
 BOARD=rock2
 TYPECHIP=rk32
 
+#can be emmc.img, nand.img or sdcard.img
+IMAGE_TARGET=emmc.img
+
 #configuration for u-boot
 UBOOT_REPO="git@x1:/rockchip/rk/u-boot"
 UBOOT_REV=rkproduct

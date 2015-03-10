@@ -42,7 +42,7 @@ IMAGE_NAME=$(BOARD)_$(BOARD_ROOTFS)_$(DATE)_$(GIT_REV)
 
 export PARAMETER PACKAGE_FILE U_BOOT_BIN
 
-all: tools uboot kernel ramdisk rootfs.ext4 boot.img nand.img emmc.img sdcard.img
+all: tools uboot kernel ramdisk rootfs.ext4 boot.img $(IMAGE_TARGET)
 
 clean:
 	$(Q)$(MAKE) -C $(KERNEL_SRC) clean

@@ -2,6 +2,9 @@
 BOARD=rock_pro
 TYPECHIP=rk31
 
+#can be emmc.img, nand.img or sdcard.img
+IMAGE_TARGET=nand.img
+
 #configuration for u-boot
 UBOOT_REPO="git://x1/linux/u-boot-rockchip.git"
 UBOOT_REV=u-boot-rk3188

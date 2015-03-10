@@ -119,17 +119,11 @@ tools/toolchain/.git:
 tools: tools/toolchain/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
 
 boot.img: tools kernel ramdisk
-	$(Q)mkdir -p $(BOARD)/rockdev/Image
-	$(Q)rm -f $(BOARD)/rockdev/Image/boot-linux.img
-	$(Q)cd $(BOARD)/rockdev
-	$(Q)cp -v $(KERNEL_SRC)/arch/arm/boot/zImage $(BOARD)/rockdev
-	$(Q)cp -v $(INITRD_DIR)/../initrd.img $(BOARD)/rockdev
-ifneq ($(wildcard $(KERNEL_SRC)/resource.img),)
-	$(Q)cp -v $(KERNEL_SRC)/resource.img $(BOARD)/rockdev
-endif
-	$(Q)cd $(BOARD)/rockdev && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_SECOND) -o Image/boot-linux.img && cd - > /dev/null
-	$(Q)rm -rf rockdev
-	$(Q)ln -s $(BOARD)/rockdev rockdev
+	$(Q)mkdir -p $(ROCKDEV_DIR)/Image
+	$(Q)cp -vf $(KERNEL_SRC)/arch/arm/boot/zImage $(ROCKDEV_DIR)
+	$(Q)cp -vf $(INITRD_DIR)/../initrd.img $(ROCKDEV_DIR)
+	$(Q)cp -vf $(KERNEL_SRC)/resource.img $(ROCKDEV_DIR)
+	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_SECOND) -o Image/boot-linux.img && cd - > /dev/null
 
 package-file: $(PACKAGE_FILE) uboot boot.img parameter rootfs.ext4
 
@@ -139,11 +133,12 @@ nand.img emmc.img: tools package-file
 	$(Q)cp -v $(PARAMETER) $(ROCKDEV_DIR)/parameter
 	$(Q)cp -v $(PACKAGE_FILE) $(ROCKDEV_DIR)/package-file
 	$(Q)rm -f "$(ROCKDEV_DIR)/"*.bin
-	$(Q)cp -v $(UBOOT_SRC)/$(U_BOOT_BIN) ${BOARD}/rockdev
+	$(Q)cp -vf $(UBOOT_SRC)/$(U_BOOT_BIN) $(ROCKDEV_DIR)
 	$(Q)rm -f update_tmp.img
-	$(Q)cd $(BOARD)/rockdev && $(TOOLS_DIR)/bin/afptool -pack ./ update_tmp.img && cd - > /dev/null
-	$(Q)cd $(BOARD)/rockdev && $(TOOLS_DIR)/bin/img_maker -$(TYPECHIP) $(U_BOOT_BIN) 1 0 0 update_tmp.img $(IMAGE_NAME)_$@ && cd - > /dev/null
+	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/afptool -pack ./ update_tmp.img && cd - > /dev/null
+	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/img_maker -$(TYPECHIP) $(U_BOOT_BIN) 1 0 0 update_tmp.img $(IMAGE_NAME)_$@ && cd - > /dev/null
 	$(Q)echo "Image is at \033[1;36m$(ROCKDEV_DIR)/$(IMAGE_NAME)_$@\033[00m"
+	$(Q)ln -sf $(ROCKDEV_DIR) rockdev
 
 sdcard.img : uboot boot.img rootfs.ext4 parameter
 	$(Q)$(TOOLS_DIR)/scripts/hwpack.sh
@@ -154,6 +149,7 @@ update:
 
 distclean:
 	rm -f .config
+	rm rockdev
 	$(Q)$(MAKE) -C $(KERNEL_SRC) distclean
 	$(Q)$(MAKE) -C $(UBOOT_SRC) distclean
 

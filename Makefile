@@ -14,16 +14,22 @@
 
 include .config
 
-OUTPUT_DIR=$(CURDIR)/output
-MODULE_DIR=$(OUTPUT_DIR)/$(BOARD)-modules
+HOST_ARCH:=$(shell uname -m )
+DATE=$(shell date +"%y-%m-%d-%H%M%S")
+J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l`)
+Q=
+
+TOOLS_DIR=$(CURDIR)/tools
+CROSS_COMPILE=$(TOOLS_DIR)/toolchain/bin/arm-eabi-
+
+MODULE_DIR=$(ROCKDEV_DIR)/modules
 KERNEL_SRC=$(CURDIR)/$(BOARD)/linux-rockchip
 UBOOT_SRC=$(CURDIR)/$(BOARD)/u-boot-rockchip
-TOOLS_DIR=$(CURDIR)/tools
 INITRD_DIR=$(CURDIR)/$(BOARD)/initrd
 ROCKDEV_DIR=$(CURDIR)/$(BOARD)/rockdev
 
 export TOOLS_DIR ROCKDEV_DIR MODULE_DIR
-export KERNEL_SRC UBOOT_SRC OUTPUT_DIR INITRD_DIR
+export KERNEL_SRC UBOOT_SRC INITRD_DIR
 
 U_CONFIG_H=$(UBOOT_SRC)/include/config.h
 K_BLD_CONFIG=$(KERNEL_SRC)/.config
@@ -32,20 +38,12 @@ U_BOOT_BIN=$(shell sed '/bootloader/!d' $(PACKAGE_FILE) | cut -f 2)
 PARAMETER=$(CURDIR)/parameter/$(BOARD)-parameter
 PACKAGE_FILE=$(CURDIR)/package-file/$(BOARD)-package-file
 IMAGE_NAME=$(BOARD)_$(DATE)
-CROSS_COMPILE=$(TOOLS_DIR)/toolchain/bin/arm-eabi-
 
 export PARAMETER PACKAGE_FILE U_BOOT_BIN
-
-HOST_ARCH:=$(shell uname -m )
-DATE=$(shell date +"%y-%m-%d-%H%M%S")
-J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l`)
-Q=
 
 all: tools uboot kernel ramdisk rootfs.ext4 boot.img nand.img emmc.img sdcard.img
 
 clean:
-	rm -f .config
-	rm -rf $(OUTPUT_DIR)
 	$(Q)$(MAKE) -C $(KERNEL_SRC) clean
 	$(Q)$(MAKE) -C $(UBOOT_SRC) clean
 
@@ -154,6 +152,7 @@ update:
 	$(Q)cd $(UBOOT_SRC) && git checkout $(UBOOT_REV) && cd - > /dev/null
 
 distclean:
+	rm -f .config
 	$(Q)$(MAKE) -C $(KERNEL_SRC) distclean
 	$(Q)$(MAKE) -C $(UBOOT_SRC) distclean
 

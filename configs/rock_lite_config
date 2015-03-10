@@ -1,5 +1,5 @@
 #board name
-BOARD=rock-lite
+BOARD=rock_lite
 TYPECHIP=rk31
 
 #configuration for u-boot

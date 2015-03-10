@@ -23,10 +23,10 @@ TOOLS_DIR=$(CURDIR)/tools
 CROSS_COMPILE=$(TOOLS_DIR)/toolchain/bin/arm-eabi-
 
 MODULE_DIR=$(ROCKDEV_DIR)/modules
-KERNEL_SRC=$(CURDIR)/$(BOARD)/linux-rockchip
-UBOOT_SRC=$(CURDIR)/$(BOARD)/u-boot-rockchip
-INITRD_DIR=$(CURDIR)/$(BOARD)/initrd
-ROCKDEV_DIR=$(CURDIR)/$(BOARD)/rockdev
+KERNEL_SRC=$(CURDIR)/boards/$(BOARD)/linux-rockchip
+UBOOT_SRC=$(CURDIR)/boards/$(BOARD)/u-boot-rockchip
+INITRD_DIR=$(CURDIR)/boards/$(BOARD)/initrd
+ROCKDEV_DIR=$(CURDIR)/boards/$(BOARD)/rockdev
 
 export TOOLS_DIR ROCKDEV_DIR MODULE_DIR
 export KERNEL_SRC UBOOT_SRC INITRD_DIR

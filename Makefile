@@ -15,7 +15,7 @@
 include .config
 
 HOST_ARCH:=$(shell uname -m )
-DATE=$(shell date +"%y-%m-%d-%H%M%S")
+DATE=$(shell date +"%y%m%d%H%M%S")
 J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l`)
 Q=
 
@@ -39,7 +39,7 @@ U_BOOT_BIN=$(shell sed '/bootloader/!d' $(PACKAGE_FILE) | cut -f 2)
 PARAMETER=$(CURDIR)/parameter/$(BOARD)-parameter
 PACKAGE_FILE=$(CURDIR)/package-file/$(BOARD)-package-file
 GIT_REV=$(shell git rev-parse --short HEAD)
-IMAGE_NAME=$(BOARD)_$(BOARD_ROOTFS)_$(DATE)_$(GIT_REV)
+IMAGE_NAME=$(BOARD)_$(shell echo $(BOARD_ROOTFS) | sed 's/\.[^ ]*/\_/g')$(DATE)_$(GIT_REV)
 
 export PARAMETER PACKAGE_FILE U_BOOT_BIN
 

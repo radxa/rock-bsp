@@ -1,21 +1,26 @@
 #board name
 BOARD=rock-lite
+TYPECHIP=rk31
 
 #configuration for u-boot
 UBOOT_REPO="git://x1/linux/u-boot-rockchip.git"
 UBOOT_REV=u-boot-rk3188
 UBOOT_DEFCONFIG=rk30xx
-UBOOT=u-boot-rockchip
+UBOOT_EXTRA=
 
 #configuration for linux kernel
 KERNEL_REPO="git://x1/linux/linux-rockchip.git"
 KERNEL_REV=radxa-stable-3.0
 KERNEL_DEFCONFIG=radxa_rock_linux_defconfig
-KERNEL=linux-rockchip
-MAKE_ARG=
+KERNEL_EXTRA=
 
-#parameter
-PARAMETER="rock_parameter"
+#initrd
+INITRD_REPO="https://github.com/radxa/initrd.git"
+INITRD_REV=master
 
-#package-fil
-PACKAGE_FILE="package-file"
+#linux-boot.img second
+BOOTIMG_SECOND="/dev/null"
+
+#rootfs URL
+BOARD_ROOTFS="rootfs_null.ext4"
+BOARD_ROOTFS_URL=""

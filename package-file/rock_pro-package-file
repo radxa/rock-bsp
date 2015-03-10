@@ -6,5 +6,4 @@ bootloader	RK3188Loader_miniall.bin
 uboot		uboot.img
 parameter	parameter
 boot		Image/boot-linux.img
-linuxroot	Image/rootfs.ext4
-backup		RESERVED
+linuxroot	Image/rootfs.img

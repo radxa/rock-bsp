@@ -10,7 +10,7 @@
 
 .PHONY: all clean help
 .PHONY: tools ramdisk boot.img
-.PHONY: uboot kernel rootfs.ext4 nand.img emmc.img sdcard.img
+.PHONY: uboot kernel rootfs nand.img emmc.img sdcard.img
 
 include .config
 
@@ -26,6 +26,7 @@ MODULE_DIR=$(ROCKDEV_DIR)/modules
 KERNEL_SRC=$(CURDIR)/boards/$(BOARD)/linux-rockchip
 UBOOT_SRC=$(CURDIR)/boards/$(BOARD)/u-boot-rockchip
 INITRD_DIR=$(CURDIR)/boards/$(BOARD)/initrd
+ROOTFS_DIR=$(CURDIR)/rootfs
 ROCKDEV_DIR=$(CURDIR)/boards/$(BOARD)/rockdev
 
 export TOOLS_DIR ROCKDEV_DIR MODULE_DIR
@@ -42,7 +43,7 @@ IMAGE_NAME=$(BOARD)_$(BOARD_ROOTFS)_$(DATE)_$(GIT_REV)
 
 export PARAMETER PACKAGE_FILE U_BOOT_BIN
 
-all: tools uboot kernel ramdisk rootfs.ext4 boot.img $(IMAGE_TARGET)
+all: tools uboot kernel ramdisk rootfs boot.img $(IMAGE_TARGET)
 
 clean:
 	$(Q)$(MAKE) -C $(KERNEL_SRC) clean
@@ -67,13 +68,12 @@ kernel: $(K_BLD_CONFIG)
 linux-config: $(K_BLD_CONFIG)
 	$(Q)$(MAKE) -C $(KERNEL_SRC) ARCH=arm menuconfig
 
-rootfs.ext4:
+rootfs:
 	$(Q)mkdir -p $(ROCKDEV_DIR)/Image
-	$(Q)touch $(ROCKDEV_DIR)/Image/rootfs.ext4
-#ifneq ($(wildcard $(ROCKDEV_DIR)/rootfs.ext4),)
-#	$(Q)wget -P $(ROCKDEV_DIR) $(ROOTFSEXT4_URL)
-#endif
-#$(Q)$(TOOLS_DIR)/scripts/mkrootfs.sh
+ifneq ($(wildcard $(ROOTFS_DIR)/$(BOARD_ROOTFS)),)
+	$(Q)wget -O $(ROOTFS_DIR)/$(BOARD_ROOTFS)) $(BOARD_ROOTFS_URL)
+endif
+	$(Q)ln -sf $(ROOTFS_DIR)/$(BOARD_ROOTFS) $(ROCKDEV_DIR)/Image/rootfs.img
 
 $(UBOOT_SRC)/.git:
 	$(Q)mkdir -p $(UBOOT_SRC)
@@ -122,10 +122,10 @@ boot.img: tools kernel ramdisk
 	$(Q)mkdir -p $(ROCKDEV_DIR)/Image
 	$(Q)cp -vf $(KERNEL_SRC)/arch/arm/boot/zImage $(ROCKDEV_DIR)
 	$(Q)cp -vf $(INITRD_DIR)/../initrd.img $(ROCKDEV_DIR)
-	$(Q)cp -vf $(KERNEL_SRC)/resource.img $(ROCKDEV_DIR)
+	$(Q)cp -vf $(KERNEL_SRC)/$(BOOTIMG_SECOND) $(ROCKDEV_DIR)
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_SECOND) -o Image/boot-linux.img && cd - > /dev/null
 
-package-file: $(PACKAGE_FILE) uboot boot.img parameter rootfs.ext4
+package-file: $(PACKAGE_FILE) uboot boot.img parameter rootfs
 
 parameter: $(PARAMETER)
 
@@ -140,7 +140,7 @@ nand.img emmc.img: tools package-file
 	$(Q)echo "Image is at \033[1;36m$(ROCKDEV_DIR)/$(IMAGE_NAME)_$@\033[00m"
 	$(Q)ln -sf $(ROCKDEV_DIR) rockdev
 
-sdcard.img : uboot boot.img rootfs.ext4 parameter
+sdcard.img : uboot boot.img rootfs parameter
 	$(Q)$(TOOLS_DIR)/scripts/hwpack.sh
 
 update:
@@ -170,7 +170,7 @@ help:
 	@echo "  make	uboot		- compile uboot"
 	@echo "  make	kernel		- compile kernel"
 	@echo "  make	ramdisk		- prepare initrd.img"
-	@echo "  make	rootfs.ext4	- prepare rootfs.ext4"
+	@echo "  make	rootfs		- prepare rootfs"
 	@echo ""
 	@echo "Packages:"
 	@echo "  make	boot.img	- prepare linux-boot.img"

@@ -5,5 +5,4 @@ package-file	package-file
 bootloader	RK3288UbootLoader_V2.19.06.bin
 parameter	parameter
 boot		Image/boot-linux.img
-#boot		Image/boot-linux.img
-linuxroot	Image/rootfs.ext4
+linuxroot	Image/rootfs.img

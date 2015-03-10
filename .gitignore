@@ -1,3 +1,5 @@
 .config
-output/*
-rootfs/*
+!tools/scripts
+tools/*
+rockdev
+boards

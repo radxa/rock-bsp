@@ -74,7 +74,7 @@ rootfs.ext4:
 #ifneq ($(wildcard $(ROCKDEV_DIR)/rootfs.ext4),)
 #	$(Q)wget -P $(ROCKDEV_DIR) $(ROOTFSEXT4_URL)
 #endif
-#$(Q)scripts/mkrootfs.sh
+#$(Q)$(TOOLS_DIR)/scripts/mkrootfs.sh
 
 $(UBOOT_SRC)/.git:
 	$(Q)mkdir -p $(UBOOT_SRC)
@@ -147,7 +147,7 @@ nand.img emmc.img: tools package-file
 	$(Q)echo "Image is at \033[1;36m$(ROCKDEV_DIR)/$(IMAGE_NAME)_$@\033[00m"
 
 sdcard.img : uboot boot.img rootfs.ext4 parameter
-	$(Q)scripts/hwpack.sh
+	$(Q)$(TOOLS_DIR)/scripts/hwpack.sh
 
 update:
 	$(Q)cd $(KERNEL_SRC) && git checkout $(KERNEL_REV) && cd - > /dev/null

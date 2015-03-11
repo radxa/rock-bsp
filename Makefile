@@ -73,6 +73,7 @@ rootfs:
 ifneq ($(wildcard $(ROOTFS_DIR)/$(BOARD_ROOTFS)),)
 	$(Q)wget -O $(ROOTFS_DIR)/$(BOARD_ROOTFS)) $(BOARD_ROOTFS_URL)
 endif
+	$(Q)rm -f $(ROCKDEV_DIR)/Image/rootfs.img
 	$(Q)ln -sf $(ROOTFS_DIR)/$(BOARD_ROOTFS) $(ROCKDEV_DIR)/Image/rootfs.img
 
 $(UBOOT_SRC)/.git:
@@ -137,8 +138,9 @@ nand.img emmc.img: tools package-file
 	$(Q)rm -f update_tmp.img
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/afptool -pack ./ update_tmp.img && cd - > /dev/null
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/img_maker -$(TYPECHIP) $(U_BOOT_BIN) 1 0 0 update_tmp.img $(IMAGE_NAME)_$@ && cd - > /dev/null
-	$(Q)echo "Image is at \033[1;36m$(ROCKDEV_DIR)/$(IMAGE_NAME)_$@\033[00m"
+	$(Q)rm -f rockdev
 	$(Q)ln -sf $(ROCKDEV_DIR) rockdev
+	$(Q)echo "Image is at \033[1;36m$(ROCKDEV_DIR)/$(IMAGE_NAME)_$@\033[00m"
 
 sdcard.img : uboot boot.img rootfs parameter
 	$(Q)$(TOOLS_DIR)/scripts/hwpack.sh

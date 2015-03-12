@@ -4,18 +4,9 @@ rock-bsp
 Getting Started
 ---------------
 
-Attention : before make, you should choice the target board
+Attention : before make, you should choose the target board
 
-1. Choose a board doing `./configure my_board`, or `./configure` to see
-   the list of supported ones.
+1. Choose a board doing `./config.sh board`, or `./config.sh` to see
+   the list of supported boards.
 
-2. Run 'make' to build and pack or 'make help' to list available targets
-
-Overview
---------
-
-This repository provides various scripts to help hacking devices with pack-toolsSOC.
-
-  ./scripts/
-    rock_mkrootfs.sh		- Ext4 rootfs from tar.gz
-    rock_mkupdateimg.sh		- Linux update image
+2. Run 'make' to build and pack nand/emmc/sdcard image or 'make help' to list available targets

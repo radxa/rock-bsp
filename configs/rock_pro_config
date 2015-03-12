@@ -6,15 +6,15 @@ TYPECHIP=rk31
 IMAGE_TARGET=nand.img
 
 #configuration for u-boot
-UBOOT_REPO="git://x1/linux/u-boot-rockchip.git"
+UBOOT_REPO="https://github.com/radxa/u-boot-rockchip.git"
 UBOOT_REV=u-boot-rk3188
 UBOOT_DEFCONFIG=rk30xx
 UBOOT_EXTRA=
 
 #configuration for linux kernel
-KERNEL_REPO="git://x1/linux/linux-rockchip.git"
+KERNEL_REPO="https://github.com/radxa/linux-rockchip.git"
 KERNEL_REV=radxa-stable-3.0
-KERNEL_DEFCONFIG=radxa_rock_linux_defconfig
+KERNEL_DEFCONFIG=radxa_rock_pro_linux_hdmi_defconfig
 KERNEL_EXTRA=
 
 #initrd

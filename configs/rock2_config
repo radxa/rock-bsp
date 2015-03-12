@@ -6,16 +6,16 @@ TYPECHIP=rk32
 IMAGE_TARGET=emmc.img
 
 #configuration for u-boot
-UBOOT_REPO="git@x1:/rockchip/rk/u-boot"
-UBOOT_REV=rkproduct
+UBOOT_REPO="https://github.com/radxa/u-boot-rockchip.git"
+UBOOT_REV=u-boot-rk3288
 UBOOT_DEFCONFIG=rk3288_defconfig
 UBOOT_EXTRA=
 
 #configuration for linux kernel
-KERNEL_REPO="git://x1/rockchip/rk/kernel.git"
-KERNEL_REV=radxa-rk3288-linux-dev
-KERNEL_DEFCONFIG=rock2_defconfig
-KERNEL_EXTRA=rk3288-tb.img
+KERNEL_REPO="https://github.com/radxa/linux-rockchip.git"
+KERNEL_REV=rock2-square-rbox
+KERNEL_DEFCONFIG=radxa_rock2_square_defconfig
+KERNEL_EXTRA=radxa-rock2-square.img
 
 #initrd
 INITRD_REPO="https://github.com/radxa/initrd.git"

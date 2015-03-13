@@ -6,8 +6,8 @@ RKFLASHTOOL_REPO="https://github.com/radxa/rkflashtool.git"
 RKFLASHTOOL_REV=master
 
 #toolchain
-TOOLCHAIN_REPO_x86_32="git://x1/rockchip/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6"
-TOOLCHAIN_REV_x86_32=android-4.4.4_r2
+TOOLCHAIN_REPO_x86_32="https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6"
+TOOLCHAIN_REV_x86_32=jb-release
 
-TOOLCHAIN_REPO_x86_64="git://x1/rockchip/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6"
-TOOLCHAIN64_REV_x86_64=android-4.4.4_r2
+TOOLCHAIN_REPO_x86_64="https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6"
+TOOLCHAIN64_REV_x86_64=kitkat-release

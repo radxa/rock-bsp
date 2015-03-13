@@ -1,5 +1,5 @@
 #board name
-BOARD=rock2
+BOARD=rock2_square
 TYPECHIP=rk32
 
 #can be emmc.img, nand.img or sdcard.img

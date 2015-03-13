@@ -2,7 +2,7 @@
 #
 #HWDEF		HWDEF
 package-file	package-file
-bootloader	RK3288UbootLoader_V2.19.06.bin
+bootloader	RK3288UbootLoader_V2.19.01.bin
 parameter	parameter
 boot		Image/boot-linux.img
 linuxroot	Image/rootfs.img

@@ -94,22 +94,20 @@ $(INITRD_DIR)/.git:
 	$(Q)mkdir -p $(INITRD_DIR)
 	$(Q)git clone $(INITRD_REPO) $(INITRD_DIR)
 	$(Q)cd $(INITRD_DIR) && git checkout $(INITRD_REV) && cd - > /dev/null
-	$(Q)$(MAKE) -C $(INITRD_DIR)
 
 #initrd.img
 ramdisk: $(INITRD_DIR)/.git
+	$(Q)$(MAKE) -C $(INITRD_DIR)
 
 tools/rockchip-mkbootimg/.git:
 	$(Q)mkdir -p $(TOOLS_DIR)/rockchip-mkbootimg
 	$(Q)git clone $(MKBOOTIMG_REPO) $(TOOLS_DIR)/rockchip-mkbootimg
 	$(Q)cd $(TOOLS_DIR)/rockchip-mkbootimg && git checkout $(MKBOOTIMG_REV) && cd - > /dev/null
-	$(Q)$(MAKE) -C $(TOOLS_DIR)/rockchip-mkbootimg install PREFIX=$(TOOLS_DIR)
 
 tools/rkflashtool/.git:
 	$(Q)mkdir -p $(TOOLS_DIR)/rkflashtool
 	$(Q)git clone $(RKFLASHTOOL_REPO) $(TOOLS_DIR)/rkflashtool
 	$(Q)cd $(TOOLS_DIR)/rkflashtool && git checkout $(RKFLASHTOOL_REV) && cd - > /dev/null
-	$(Q)$(MAKE) -C $(TOOLS_DIR)/rkflashtool install PREFIX=$(TOOLS_DIR)
 
 tools/toolchain/.git:
 	$(Q)mkdir -p $(TOOLS_DIR)/toolchain
@@ -118,6 +116,8 @@ tools/toolchain/.git:
 
 #rock tools
 tools: tools/toolchain/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
+	$(Q)$(MAKE) -C $(TOOLS_DIR)/rockchip-mkbootimg install PREFIX=$(TOOLS_DIR)
+	$(Q)$(MAKE) -C $(TOOLS_DIR)/rkflashtool install PREFIX=$(TOOLS_DIR)
 
 boot.img: tools kernel ramdisk
 	$(Q)mkdir -p $(ROCKDEV_DIR)/Image

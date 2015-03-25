@@ -25,5 +25,5 @@ INITRD_REV=master
 BOOTIMG_SECOND="/dev/null"
 
 #rootfs URL
-BOARD_ROOTFS="rootfs_null.ext4"
-BOARD_ROOTFS_URL=""
+BOARD_ROOTFS="linaro-trusty-desktop.ext4"
+BOARD_ROOTFS_URL="http://dl.radxa.com/rock_pro/images/rootfs/linaro-trusty-desktop.ext4.xz"

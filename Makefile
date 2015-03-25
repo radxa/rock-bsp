@@ -41,6 +41,7 @@ PACKAGE_FILE=$(CURDIR)/package-file/$(BOARD)-package-file
 GIT_REV=$(shell git rev-parse --short HEAD)
 IMAGE_NAME=$(BOARD)_$(shell echo $(BOARD_ROOTFS) | sed 's/\.[^ ]*/\_/g')$(DATE)_$(GIT_REV)
 
+
 export PARAMETER PACKAGE_FILE U_BOOT_BIN
 
 all: tools uboot kernel ramdisk rootfs boot.img $(IMAGE_TARGET)
@@ -123,9 +124,7 @@ boot.img: tools kernel ramdisk
 	$(Q)mkdir -p $(ROCKDEV_DIR)/Image
 	$(Q)cp -vf $(KERNEL_SRC)/arch/arm/boot/zImage $(ROCKDEV_DIR)
 	$(Q)cp -vf $(INITRD_DIR)/../initrd.img $(ROCKDEV_DIR)
-ifneq ($(CURDIR)/$(KERNEL_SRC)/resource.img, $(CURDIR)/$(wildcard $(KERNEL_SRC)/resource.img))
-	$(Q)cp -vf $(KERNEL_SRC)/$(BOOTIMG_SECOND) $(ROCKDEV_DIR)
-endif
+	$(shell if [ -f "$(KERNEL_SRC)/"resource.img ]; then cp $(KERNEL_SRC)/$(BOOTIMG_SECOND) $(ROCKDEV_DIR); fi)
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_SECOND) -o Image/boot-linux.img && cd - > /dev/null
 
 package-file: $(PACKAGE_FILE) uboot boot.img parameter rootfs
@@ -135,8 +134,7 @@ parameter: $(PARAMETER)
 nand.img emmc.img: tools package-file
 	$(Q)cp -v $(PARAMETER) $(ROCKDEV_DIR)/parameter
 	$(Q)cp -v $(PACKAGE_FILE) $(ROCKDEV_DIR)/package-file
-	$(Q)rm -f "$(ROCKDEV_DIR)/"*.bin
-	$(Q)cp -vf $(UBOOT_SRC)/$(U_BOOT_BIN) $(ROCKDEV_DIR)
+	$(Q)cp -vf $(UBOOT_SRC)/*.img $(UBOOT_SRC)/*.bin $(ROCKDEV_DIR)
 	$(Q)rm -f update_tmp.img
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/afptool -pack ./ update_tmp.img && cd - > /dev/null
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/img_maker -$(TYPECHIP) $(U_BOOT_BIN) 1 0 0 update_tmp.img $(IMAGE_NAME)_$@ && cd - > /dev/null

@@ -66,7 +66,7 @@ kernel: $(K_BLD_CONFIG)
 	$(Q)$(MAKE) -C $(KERNEL_SRC) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm INSTALL_MOD_PATH=$(MODULE_DIR) modules
 	$(Q)$(MAKE) -C $(KERNEL_SRC) CROSS_COMPILE=$(CROSS_COMPILE) ARCH=arm INSTALL_MOD_PATH=$(MODULE_DIR) modules_install
 
-linux-config: $(K_BLD_CONFIG)
+kernel-config: $(K_BLD_CONFIG)
 	$(Q)$(MAKE) -C $(KERNEL_SRC) ARCH=arm menuconfig
 
 rootfs:
@@ -168,7 +168,7 @@ help:
 	@echo "  make	tools		- Builds open source tools,then install"
 	@echo ""
 	@echo "  Optional targets:"
-	@echo "  make	linux-config	- make menuconfig"
+	@echo "  make	kernel-config	- configure the linux kernel"
 	@echo "  make	uboot		- compile uboot"
 	@echo "  make	kernel		- compile kernel"
 	@echo "  make	ramdisk		- prepare initrd.img"

@@ -134,7 +134,10 @@ parameter: $(PARAMETER)
 nand.img emmc.img: tools package-file
 	$(Q)cp -v $(PARAMETER) $(ROCKDEV_DIR)/parameter
 	$(Q)cp -v $(PACKAGE_FILE) $(ROCKDEV_DIR)/package-file
-	$(Q)cp -vf $(UBOOT_SRC)/*.img $(UBOOT_SRC)/*.bin $(ROCKDEV_DIR)
+ifneq ("$(wildcard $(UBOOT_SRC)/*.img)", "")
+	$(Q)cp -vf $(UBOOT_SRC)/*.img  $(ROCKDEV_DIR)
+endif
+	$(Q)cp -vf $(UBOOT_SRC)/*.bin $(ROCKDEV_DIR)
 	$(Q)rm -f update_tmp.img
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/afptool -pack ./ update_tmp.img && cd - > /dev/null
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/img_maker -$(TYPECHIP) $(U_BOOT_BIN) 1 0 0 update_tmp.img $(IMAGE_NAME)_$@ && cd - > /dev/null

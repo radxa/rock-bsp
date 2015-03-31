@@ -151,7 +151,7 @@ update:
 
 distclean:
 	rm -f .config
-	rm rockdev
+	rm -rf rockdev boards
 	$(Q)$(MAKE) -C $(KERNEL_SRC) distclean
 	$(Q)$(MAKE) -C $(UBOOT_SRC) distclean
 

@@ -71,7 +71,7 @@ kernel-config: $(K_BLD_CONFIG)
 
 rootfs:
 	$(Q)mkdir -p $(ROCKDEV_DIR)/Image
-ifeq ($(wildcard $(ROOTFS_DIR)/$(BOARD_ROOTFS)),)
+ifeq ("$(wildcard $(ROOTFS_DIR)/$(BOARD_ROOTFS))", "")
 	$(Q)wget -O - $(BOARD_ROOTFS_URL) | xz -dcv > $(ROOTFS_DIR)/$(BOARD_ROOTFS)
 endif
 	$(Q)rm -f $(ROCKDEV_DIR)/Image/rootfs.img

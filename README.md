@@ -33,3 +33,27 @@ Getting Started
 3. Run `make` to build and pack nand/emmc/sdcard image or `make help` to list available targets
 
     make
+
+Configuration
+-------------
+The directory structure of rock-bsp is as below:
+
+    .
+    ├── configs
+    │   ├── defconfig
+    │   ├── *board*_config
+    ├── package-file
+    │   ├── *board*-package-file
+    ├── parameter
+    │   ├── *board*-parameter
+    ├── rootfs
+    │   └── rootfs_null.ext4
+    └── tools
+        └── scripts
+
+* configs: define board kernel/u-boot repository, revision, defconfigs and rootfs name/url.
+* package-file: define what can be packed into the image
+* parameter: define kernel command line, emmc/nand partitions
+* rootfs: put your rootfs image here and add the image name in board_config
+* tools: tools developed by linux-rockchip community and arm toolchains
+    

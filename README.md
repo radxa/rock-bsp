@@ -15,7 +15,7 @@ Getting Started
 ------------------
 0. install required packages
 
-    sudo apt-get install build-essential lzop libncurses5-dev libssl-dev
+    sudo apt-get install build-essential lzop libncurses5-dev libssl-dev libusb-1.0-0-dev
 
 1. get the source code
 

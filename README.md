@@ -13,6 +13,10 @@ supported Linux distributions are `Debian` and `Ubuntu`.
 
 Getting Started
 ------------------
+0. install required packages
+
+    sudo apt-get install build-essential lzop libncurses5-dev libssl-dev
+
 1. get the source code
 
     git clone https://github.com/radxa/rock-bsp.git

@@ -15,7 +15,7 @@
 include .config
 
 HOST_ARCH:=$(shell uname -m )
-DATE=$(shell date +"%y%m%d%H%M%S")
+DATE=$(shell date +"%y%m%d")
 J=$(shell expr `grep ^processor /proc/cpuinfo  | wc -l`)
 Q=
 

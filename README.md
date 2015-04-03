@@ -17,6 +17,10 @@ Getting Started
 
     sudo apt-get install build-essential lzop libncurses5-dev libssl-dev libusb-1.0-0-dev
 
+you also need to install the following if you run it on 64bit system:
+
+    sudo apt-get install libc6-i386
+
 1. get the source code
 
     git clone https://github.com/radxa/rock-bsp.git

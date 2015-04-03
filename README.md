@@ -15,6 +15,7 @@ Getting Started
 ------------------
 0. install required packages
 
+
     sudo apt-get install build-essential lzop libncurses5-dev libssl-dev libusb-1.0-0-dev
 
 you also need to install the following if you run it on 64bit system:
@@ -23,22 +24,24 @@ you also need to install the following if you run it on 64bit system:
 
 1. get the source code
 
+
     git clone https://github.com/radxa/rock-bsp.git
     cd rock-bsp
 
 2. Choose a board doing `./config.sh board`, or `./config.sh` to see
    the list of supported boards.
 
+
     ./config.sh 
     Usage: ./config.sh < board >
-
     supported boards:
-	* rock2_square
-	* rock_lite
-	* rock_pro
+    * rock2_square
+    * rock_lite
+    * rock_pro
 
 
 3. Run `make` to build and pack nand/emmc/sdcard image or `make help` to list available targets
+
 
     make
 

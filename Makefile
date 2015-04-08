@@ -70,12 +70,11 @@ kernel-config: $(K_BLD_CONFIG)
 	$(Q)$(MAKE) -C $(KERNEL_SRC) ARCH=arm menuconfig
 
 rootfs:
-	$(Q)mkdir -p $(ROCKDEV_DIR)/Image
 ifeq ("$(wildcard $(ROOTFS_DIR)/$(BOARD_ROOTFS))", "")
 	$(Q)wget -O - $(BOARD_ROOTFS_URL) | xz -dcv > $(ROOTFS_DIR)/$(BOARD_ROOTFS)
 endif
-	$(Q)rm -f $(ROCKDEV_DIR)/Image/rootfs.img
-	$(Q)ln -sf $(ROOTFS_DIR)/$(BOARD_ROOTFS) $(ROCKDEV_DIR)/Image/rootfs.img
+	$(Q)rm -f $(ROCKDEV_DIR)/rootfs.img
+	$(Q)ln -sf $(ROOTFS_DIR)/$(BOARD_ROOTFS) $(ROCKDEV_DIR)/rootfs.img
 
 $(UBOOT_SRC)/.git:
 	$(Q)mkdir -p $(UBOOT_SRC)
@@ -121,11 +120,13 @@ tools: tools/toolchain/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git
 	$(Q)$(MAKE) -C $(TOOLS_DIR)/rkflashtool install PREFIX=$(TOOLS_DIR)
 
 boot.img: tools kernel ramdisk
-	$(Q)mkdir -p $(ROCKDEV_DIR)/Image
-	$(Q)cp -vf $(KERNEL_SRC)/arch/arm/boot/zImage $(ROCKDEV_DIR)
-	$(Q)cp -vf $(INITRD_DIR)/../initrd.img $(ROCKDEV_DIR)
-	$(shell if [ -f "$(KERNEL_SRC)/"resource.img ]; then cp $(KERNEL_SRC)/$(BOOTIMG_SECOND) $(ROCKDEV_DIR); fi)
-	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_SECOND) -o Image/boot-linux.img && cd - > /dev/null
+	$(Q)mkdir -p $(ROCKDEV_DIR)/boot
+	$(Q)cp -vf $(KERNEL_SRC)/arch/arm/boot/zImage $(ROCKDEV_DIR)/boot
+	$(Q)cp -vf $(KERNEL_SRC)/arch/arm/configs/$(KERNEL_DEFCONFIG) $(ROCKDEV_DIR)/boot/config
+	$(Q)cp -vf $(KERNEL_SRC)/System.map $(ROCKDEV_DIR)/boot
+	$(Q)cp -vf $(INITRD_DIR)/../initrd.img $(ROCKDEV_DIR)/boot
+	$(shell if [ -f "$(KERNEL_SRC)/"resource.img ]; then cp $(KERNEL_SRC)/$(BOOTIMG_SECOND) $(ROCKDEV_DIR)/boot/; fi)
+	$(Q)cd $(ROCKDEV_DIR)/boot && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_SECOND) -o boot-linux.img && cd - > /dev/null
 
 package-file: $(PACKAGE_FILE) uboot boot.img parameter rootfs
 

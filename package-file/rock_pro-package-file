@@ -5,5 +5,5 @@ package-file	package-file
 bootloader	RK3188Loader_miniall.bin
 uboot		uboot.img
 parameter	parameter
-boot		Image/boot-linux.img
-linuxroot	Image/rootfs.img
+boot		boot/boot-linux.img
+linuxroot	rootfs.img

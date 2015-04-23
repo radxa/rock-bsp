@@ -9,5 +9,8 @@ RKFLASHTOOL_REV=master
 TOOLCHAIN_REPO_x86_32="https://github.com/radxa/android-platform-prebuilts-gcc-linux-x86-arm-arm-eabi-4.6.git"
 TOOLCHAIN_REV_x86_32=jb-release
 
+TOOLCHAIN_REPO_i686="https://github.com/radxa/android-platform-prebuilts-gcc-linux-x86-arm-arm-eabi-4.6.git"
+TOOLCHAIN_REV_i686=jb-release
+
 TOOLCHAIN_REPO_x86_64="https://github.com/radxa/android-platform-prebuilts-gcc-linux-x86-arm-arm-eabi-4.6.git"
 TOOLCHAIN64_REV_x86_64=kitkat-release

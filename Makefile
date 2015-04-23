@@ -112,7 +112,7 @@ tools/rkflashtool/.git:
 
 tools/toolchain/.git:
 	$(Q)mkdir -p $(TOOLS_DIR)/toolchain
-	$(Q)git clone -n --depth 1 $(TOOLCHAIN_REPO_$(HOST_ARCH)) $(TOOLS_DIR)/toolchain
+	$(Q)git clone -n $(TOOLCHAIN_REPO_$(HOST_ARCH)) $(TOOLS_DIR)/toolchain
 	$(Q)cd $(TOOLS_DIR)/toolchain && git checkout $(TOOLCHAIN_REV_$(HOST_ARCH)) && cd - > /dev/null
 
 #rock tools

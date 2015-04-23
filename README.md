@@ -5,6 +5,7 @@ Introduction
 
 rock-bsp is a collection of bootloader(u-boot), Linux kernel, flashing tools and toolchains for making a Linux images for radxa products as well as other rockchip based platform. Currently supported boards are:
 
+* rock full(2013)
 * rock pro
 * rock lite
 * rock2 square 

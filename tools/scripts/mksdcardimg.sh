@@ -1,9 +1,9 @@
 #!/bin/sh
 
 TODAY="`date +"%y-%m-%d"`"
-IMG="rock_lite_${TODAY}_sdcard.img"
+IMG="${1}_${TODAY}_sdcard.img"
 
-tools/bin/rkcrc -p parameter parameter.img
+./rkcrc -p parameter parameter.img
 
 rm -rf $IMG
 dd if=/dev/zero of=$IMG bs=1M count=1950

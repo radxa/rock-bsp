@@ -152,7 +152,9 @@ endif
 sdcard.img : uboot boot.img rootfs parameter
 	$(Q)cp -v $(PARAMETER) $(ROCKDEV_DIR)/parameter
 	$(Q)cp -vf $(UBOOT_SRC)/*.img  $(ROCKDEV_DIR)
-	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/scripts/mksdcardimg.sh && cd - > /dev/null
+	$(Q)rm -f $(ROCKDEV_DIR)/rkcrc
+	$(Q)ln -sf $(TOOLS_DIR)/bin/rkcrc $(ROCKDEV_DIR)/
+	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/scripts/mksdcardimg.sh $(BOARD) && cd - > /dev/null
 	$(Q)rm -f rockdev
 	$(Q)ln -sf $(ROCKDEV_DIR) rockdev
 

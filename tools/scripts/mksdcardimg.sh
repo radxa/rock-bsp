@@ -3,7 +3,7 @@
 TODAY="`date +"%y-%m-%d"`"
 IMG="${1}_${TODAY}_sdcard.img"
 
-./rkcrc -p parameter parameter.img
+${TOOLS_DIR}/bin/rkcrc -p parameter parameter.img
 
 rm -rf $IMG
 dd if=/dev/zero of=$IMG bs=1M count=1950

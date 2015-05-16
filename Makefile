@@ -126,9 +126,8 @@ boot.img: tools kernel ramdisk
 	$(Q)cp -vf $(KERNEL_SRC)/arch/arm/configs/$(KERNEL_DEFCONFIG) $(ROCKDEV_DIR)/boot/config
 	$(Q)cp -vf $(KERNEL_SRC)/System.map $(ROCKDEV_DIR)/boot
 	$(Q)cp -vf $(INITRD_DIR)/../initrd.img $(ROCKDEV_DIR)/boot
-ifneq ("$(wildcard $(KERNEL_SRC)/$(BOOTIMG_SECOND))", "")
-	cp $(KERNEL_SRC)/$(BOOTIMG_SECOND) $(ROCKDEV_DIR)/boot/
-endif
+	$(Q)if [ -e $(KERNEL_SRC)/$(BOOTIMG_SECOND) ]; then \
+		cp $(KERNEL_SRC)/$(BOOTIMG_SECOND) $(ROCKDEV_DIR)/boot/; fi;
 	$(Q)cd $(ROCKDEV_DIR)/boot && $(TOOLS_DIR)/bin/mkbootimg --kernel zImage --ramdisk initrd.img --second $(BOOTIMG_SECOND) -o boot-linux.img && cd - > /dev/null
 
 package-file: $(PACKAGE_FILE) uboot boot.img parameter rootfs

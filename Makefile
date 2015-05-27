@@ -154,7 +154,7 @@ endif
 	$(Q)cp -vf $(UBOOT_SRC)/*.bin $(ROCKDEV_DIR)
 	$(Q)rm -f update_tmp.img
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/afptool -pack ./ update_tmp.img && cd - > /dev/null
-	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/img_maker -$(TYPECHIP) $(U_BOOT_BIN) 1 0 0 update_tmp.img $(IMAGE_NAME)_$@ && cd - > /dev/null
+	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/img_maker -$(TYPECHIP) "$(U_BOOT_BIN)" 1 0 0 update_tmp.img $(IMAGE_NAME)_$@ && cd - > /dev/null
 	$(Q)rm -f rockdev
 	$(Q)ln -sf $(ROCKDEV_DIR) rockdev
 	$(Q)echo "Image is at \033[1;36m$(ROCKDEV_DIR)/$(IMAGE_NAME)_$@\033[00m"

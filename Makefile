@@ -28,6 +28,7 @@ UBOOT_SRC=$(CURDIR)/boards/$(BOARD)/u-boot-rockchip
 INITRD_DIR=$(CURDIR)/boards/$(BOARD)/initrd
 ROOTFS_DIR=$(CURDIR)/rootfs
 ROCKDEV_DIR=$(CURDIR)/boards/$(BOARD)/rockdev
+RK_LOADER_DIR=$(CURDIR)/rk_loader
 
 export TOOLS_DIR ROCKDEV_DIR MODULE_DIR
 export KERNEL_SRC UBOOT_SRC INITRD_DIR
@@ -44,7 +45,7 @@ IMAGE_NAME=$(BOARD)_$(shell echo $(BOARD_ROOTFS) | sed 's/\.[^ ]*/\_/g')$(DATE)_
 
 export PARAMETER PACKAGE_FILE U_BOOT_BIN
 
-all: tools uboot kernel ramdisk rootfs boot.img $(IMAGE_TARGET)
+all: tools rk_loader uboot kernel ramdisk rootfs boot.img $(IMAGE_TARGET)
 
 clean:
 	$(Q)$(MAKE) -C $(KERNEL_SRC) clean
@@ -114,6 +115,16 @@ tools/toolchain/.git:
 	$(Q)mkdir -p $(TOOLS_DIR)/toolchain
 	$(Q)git clone -n $(TOOLCHAIN_REPO_$(HOST_ARCH)) $(TOOLS_DIR)/toolchain
 	$(Q)cd $(TOOLS_DIR)/toolchain && git checkout $(TOOLCHAIN_REV_$(HOST_ARCH)) && cd - > /dev/null
+
+#rockchip loader
+rk_loader: rk_loader/.git
+	$(Q)mkdir -p $(ROCKDEV_DIR)
+	$(Q)ln -s $(RK_LOADER_DIR) $(ROCKDEV_DIR)/rk_loader
+
+rk_loader/.git:
+	$(Q)mkdir -p $(RK_LOADER_DIR)
+	$(Q)git clone -n $(RK_LOADER_REPO) $(RK_LOADER_DIR)
+	$(Q)cd $(RK_LOADER_DIR) && git checkout $(RK_LOADER_REV) && cd - > /dev/null
 
 #rock tools
 tools: tools/toolchain/.git tools/rockchip-mkbootimg/.git tools/rkflashtool/.git

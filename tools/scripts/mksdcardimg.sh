@@ -1,7 +1,7 @@
 #!/bin/sh
 
 TODAY="`date +"%y-%m-%d"`"
-IMG="${1}_${TODAY}_sdcard.img"
+IMG="${1}_sdcard.img"
 
 ${TOOLS_DIR}/bin/rkcrc -p parameter parameter.img
 

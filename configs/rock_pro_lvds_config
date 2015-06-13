@@ -1,0 +1,31 @@
+#board name
+BOARD=rock_pro
+TYPECHIP=rk31
+
+#can be emmc.img, nand.img or sdcard.img
+IMAGE_TARGET=nand.img
+
+#configuration for u-boot
+UBOOT_REPO="https://github.com/radxa/u-boot-rockchip.git"
+UBOOT_REV=u-boot-rk3188
+UBOOT_DEFCONFIG=rk30xx
+UBOOT_EXTRA=
+
+#configuration for linux kernel
+KERNEL_REPO="https://github.com/radxa/linux-rockchip.git"
+KERNEL_REV=radxa-stable-3.0
+KERNEL_DEFCONFIG=radxa_rock_pro_linux_lvds_defconfig
+KERNEL_EXTRA=
+
+#initrd
+INITRD_REPO="https://github.com/radxa/initrd.git"
+INITRD_REV=master
+
+#linux-boot.img second
+BOOTIMG_SECOND=/dev/null
+
+#rootfs URL
+BOARD_ROOTFS=linaro-trusty-desktop.ext4
+BOARD_ROOTFS_URL="http://dl.radxa.com/rock_pro/images/rootfs/linaro-trusty-desktop.ext4.xz"
+#BOARD_ROOTFS="debian-wheezy-server.ext4"
+#BOARD_ROOTFS_URL="http://dl.radxa.com/rock_pro/images/rootfs/debian-wheezy-server.ext4.xz"

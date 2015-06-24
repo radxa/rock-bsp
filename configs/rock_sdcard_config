@@ -6,19 +6,19 @@ TYPECHIP=rk31
 IMAGE_TARGET=sdcard.img
 
 #configuration for u-boot
-UBOOT_REPO="git://x1/github/u-boot-rockchip.git"
+UBOOT_REPO="https://github.com/radxa/u-boot-rockchip.git"
 UBOOT_REV=u-boot-rk3188-sdcard
 UBOOT_DEFCONFIG=rk30xx
 UBOOT_EXTRA=
 
 #configuration for linux kernel
-KERNEL_REPO="git://x1/github/linux-rockchip.git"
+KERNEL_REPO="https://github.com/radxa/linux-rockchip.git"
 KERNEL_REV=radxa-rbox
 KERNEL_DEFCONFIG=radxa_rock_defconfig
 KERNEL_EXTRA=
 
 #initrd
-INITRD_REPO="git://x1/github/initrd.git"
+INITRD_REPO="https://github.com/radxa/initrd.git"
 INITRD_REV=master
 
 #linux-boot.img second

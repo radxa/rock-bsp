@@ -1,5 +1,5 @@
 #board name
-BOARD=rock_lite
+BOARD=rock_lite_lvds
 TYPECHIP=rk31
 
 #can be emmc.img, nand.img or sdcard.img

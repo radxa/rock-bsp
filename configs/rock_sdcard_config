@@ -27,7 +27,3 @@ BOOTIMG_SECOND=/dev/null
 #rootfs URL
 BOARD_ROOTFS=linaro-trusty-desktop.ext4
 BOARD_ROOTFS_URL="http://dl.radxa.com/rock_lite/images/rootfs/linaro-trusty-desktop.ext4.xz"
-#BOARD_ROOTFS=rabian_rock_lite_05e6b63.ext4
-BOARD_ROOTFS=rabian_rock_c209b8f.ext4
-BOARD_ROOTFS=rabian_rock_c209b8f.ext4
-BOARD_ROOTFS=rabian_rock_c209b8f.ext4

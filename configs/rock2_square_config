@@ -25,5 +25,5 @@ INITRD_REV=master
 BOOTIMG_SECOND=resource.img
 
 #rootfs URL
-BOARD_ROOTFS=debian-jessie-desktop.ext4
+BOARD_ROOTFS=linaro-trusty-desktop.ext4
 BOARD_ROOTFS_URL="http://dl.radxa.com/rock2/images/rootfs/debian-jessie-desktop.ext4.xz"

@@ -37,8 +37,8 @@ U_CONFIG_H=$(UBOOT_SRC)/include/config.h
 K_BLD_CONFIG=$(KERNEL_SRC)/.config
 
 U_BOOT_BIN=$(shell sed '/bootloader/!d' $(PACKAGE_FILE) | cut -f 2)
-PARAMETER=$(CURDIR)/parameter/$(BOARD)-parameter
-PACKAGE_FILE=$(CURDIR)/package-file/$(BOARD)-package-file
+PARAMETER=$(CURDIR)/parameter/$(BOARD_DIR)-parameter
+PACKAGE_FILE=$(CURDIR)/package-file/$(BOARD_DIR)-package-file
 GIT_REV=$(shell git rev-parse --short HEAD)
 IMAGE_NAME=$(BOARD)_$(shell echo $(BOARD_ROOTFS) | sed 's/\.[^ ]*/\_/g')$(DATE)_$(GIT_REV)
 

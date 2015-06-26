@@ -1,21 +1,21 @@
 #board name
-BOARD=rock_lite_lvds
-BOARD_DIR=rock_lite
+BOARD=q7
+BOARD_DIR=q7
 TYPECHIP=rk31
 
 #can be emmc.img, nand.img or sdcard.img
-IMAGE_TARGET=sdcard.img
+IMAGE_TARGET=nand.img
 
 #configuration for u-boot
 UBOOT_REPO="https://github.com/radxa/u-boot-rockchip.git"
-UBOOT_REV=u-boot-rk3188-sdcard
+UBOOT_REV=u-boot-rk3188
 UBOOT_DEFCONFIG=rk30xx
 UBOOT_EXTRA=
 
 #configuration for linux kernel
 KERNEL_REPO="https://github.com/radxa/linux-rockchip.git"
-KERNEL_REV=radxa-stable-3.0
-KERNEL_DEFCONFIG=radxa_rock_pro_linux_lvds_defconfig
+KERNEL_REV=radxa-stable-3.0-q7
+KERNEL_DEFCONFIG=radxa_q7_rk3188_defconfig
 KERNEL_EXTRA=
 
 #initrd
@@ -27,4 +27,4 @@ BOOTIMG_SECOND=/dev/null
 
 #rootfs URL
 BOARD_ROOTFS=linaro-trusty-desktop.ext4
-BOARD_ROOTFS_URL="http://dl.radxa.com/rock_lite/images/rootfs/linaro-trusty-desktop.ext4.xz"
+BOARD_ROOTFS_URL="http://dl.radxa.com/rock_pro/images/rootfs/linaro-trusty-desktop.ext4.xz"

@@ -160,7 +160,7 @@ endif
 	$(Q)echo "Image is at \033[1;36m$(ROCKDEV_DIR)/$(IMAGE_NAME)_$@\033[00m"
 
 sdcard.img : uboot boot.img rootfs parameter
-	$(Q)cp -v $(PARAMETER) $(ROCKDEV_DIR)/parameter
+	$(Q)cp -v $(PARAMETER)-sdcard $(ROCKDEV_DIR)/parameter
 	$(Q)cp -vf $(UBOOT_SRC)/*.img  $(ROCKDEV_DIR)
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/scripts/mksdcardimg.sh $(IMAGE_NAME) && cd - > /dev/null
 	$(Q)rm -f rockdev

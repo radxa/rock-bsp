@@ -23,7 +23,7 @@ usage() {
 	cat <<-EOT >&2
 	Usage: $0 <board>
 
-	supported boards:
+	supported boards images:
 	EOT
 	list_boards
 }

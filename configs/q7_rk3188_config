@@ -1,10 +1,10 @@
 #board name
-BOARD=q7
-BOARD_DIR=q7
+BOARD=q7_rk3188
+BOARD_DIR=q7_rk3188
 TYPECHIP=rk31
 
 #can be emmc.img, nand.img or sdcard.img
-IMAGE_TARGET=nand.img
+IMAGE_TARGET=emmc.img
 
 #configuration for u-boot
 UBOOT_REPO="https://github.com/radxa/u-boot-rockchip.git"
@@ -26,5 +26,5 @@ INITRD_REV=master
 BOOTIMG_SECOND=/dev/null
 
 #rootfs URL
-BOARD_ROOTFS=linaro-trusty-desktop.ext4
+BOARD_ROOTFS=q7_rabian_rootfs.ext4
 BOARD_ROOTFS_URL="http://dl.radxa.com/rock_pro/images/rootfs/linaro-trusty-desktop.ext4.xz"

@@ -152,6 +152,7 @@ ifneq ("$(wildcard $(UBOOT_SRC)/*.img)", "")
 	$(Q)cp -vf $(UBOOT_SRC)/*.img  $(ROCKDEV_DIR)
 endif
 	$(Q)cp -vf $(UBOOT_SRC)/*.bin $(ROCKDEV_DIR)
+	$(Q)if [ ! -L $(ROCKDEV_DIR)/rk_loader ]; then ln -s $(RK_LOADER_DIR) $(ROCKDEV_DIR)/rk_loader; fi;
 	$(Q)rm -f update_tmp.img
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/afptool -pack ./ update_tmp.img && cd - > /dev/null
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/bin/img_maker -$(TYPECHIP) "$(U_BOOT_BIN)" 1 0 0 update_tmp.img $(IMAGE_NAME)_$@ && cd - > /dev/null

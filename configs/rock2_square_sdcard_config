@@ -1,31 +1,31 @@
 #board name
-BOARD=rock_sdcard
-BOARD_DIR=rock
-TYPECHIP=rk31
+BOARD=rock2_square_sdcard
+BOARD_DIR=rock2_square
+TYPECHIP=rk32
 
 #can be emmc.img, nand.img or sdcard.img
 IMAGE_TARGET=sdcard.img
 
 #configuration for u-boot
-SDBOOT_IMG=sdboot_rk3188.img
+SDBOOT_IMG=sdboot_rk3288.img
 UBOOT_REPO="https://github.com/radxa/u-boot-rockchip.git"
-UBOOT_REV=u-boot-rk3188-sdcard
-UBOOT_DEFCONFIG=rk30xx
+UBOOT_REV=u-boot-rk3288
+UBOOT_DEFCONFIG=rk3288_defconfig
 UBOOT_EXTRA=
 
 #configuration for linux kernel
 KERNEL_REPO="https://github.com/radxa/linux-rockchip.git"
-KERNEL_REV=radxa-rbox
-KERNEL_DEFCONFIG=radxa_rock_defconfig
-KERNEL_EXTRA=
+KERNEL_REV=rock2-square-rbox
+KERNEL_DEFCONFIG=radxa_rock2_square_defconfig
+KERNEL_EXTRA=radxa-rock2-square.img
 
 #initrd
 INITRD_REPO="https://github.com/radxa/initrd.git"
 INITRD_REV=master
 
 #linux-boot.img second
-BOOTIMG_SECOND=/dev/null
+BOOTIMG_SECOND=resource.img
 
 #rootfs URL
 BOARD_ROOTFS=linaro-trusty-desktop.ext4
-BOARD_ROOTFS_URL="http://dl.radxa.com/rock_lite/images/rootfs/linaro-trusty-desktop.ext4.xz"
+BOARD_ROOTFS_URL="http://dl.radxa.com/rock2/images/rootfs/debian-jessie-desktop.ext4.xz"

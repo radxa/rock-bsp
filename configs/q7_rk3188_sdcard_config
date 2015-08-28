@@ -7,6 +7,7 @@ TYPECHIP=rk31
 IMAGE_TARGET=sdcard.img
 
 #configuration for u-boot
+SDBOOT_IMG=sdboot_rk3188.img
 UBOOT_REPO="https://github.com/radxa/u-boot-rockchip.git"
 UBOOT_REV=u-boot-rk3188-sdcard
 UBOOT_DEFCONFIG=rk30xx

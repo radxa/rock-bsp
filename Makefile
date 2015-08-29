@@ -163,7 +163,9 @@ endif
 
 sdcard.img : uboot boot.img rootfs parameter
 	$(Q)cp -v $(PARAMETER)-sdcard $(ROCKDEV_DIR)/parameter
+ifneq ("$(wildcard $(UBOOT_SRC)/*.img)", "")
 	$(Q)cp -vf $(UBOOT_SRC)/*.img  $(ROCKDEV_DIR)
+endif
 	$(Q)if [ ! -L $(ROCKDEV_DIR)/rk_loader ]; then ln -s $(RK_LOADER_DIR) $(ROCKDEV_DIR)/rk_loader; fi;
 	$(Q)cd $(ROCKDEV_DIR) && $(TOOLS_DIR)/scripts/mksdcardimg.sh $(IMAGE_NAME) && cd - > /dev/null
 	$(Q)rm -f rockdev

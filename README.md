@@ -9,6 +9,7 @@ rock-bsp is a collection of bootloader(u-boot), Linux kernel, flashing tools and
 * rock pro
 * rock lite
 * rock2 square 
+* q7 rk3188
 
 supported Linux distributions are `Debian` and `Ubuntu`.
 
@@ -36,9 +37,18 @@ you also need to install the following if you run it on 64bit system:
     ./config.sh 
     Usage: ./config.sh < board >
     supported boards:
-    * rock2_square
-    * rock_lite
-    * rock_pro
+	* q7_rk3188
+	* q7_rk3188_sdcard
+	* rock
+	* rock2_square
+	* rock2_square_sdcard
+	* rock_lite
+	* rock_lite_lvds
+	* rock_pro
+	* rock_pro_lvds
+	* rock_pro_lvds_sdcard
+	* rock_pro_sdcard
+	* rock_sdcard
 
 
 3. Run `make` to build and pack nand/emmc/sdcard image or `make help` to list available targets

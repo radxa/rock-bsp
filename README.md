@@ -15,22 +15,18 @@ supported Linux distributions are `Debian` and `Ubuntu`.
 
 Getting Started
 ------------------
-0. install required packages
+
+1. install required packages:
+
+        sudo apt-get install build-essential lzop libncurses5-dev libssl-dev libusb-1.0-0-dev libc6-i386
+
+2. get the source code
 
 
-    sudo apt-get install build-essential lzop libncurses5-dev libssl-dev libusb-1.0-0-dev
+        git clone https://github.com/radxa/rock-bsp.git
+        cd rock-bsp
 
-you also need to install the following if you run it on 64bit system:
-
-    sudo apt-get install libc6-i386
-
-1. get the source code
-
-
-    git clone https://github.com/radxa/rock-bsp.git
-    cd rock-bsp
-
-2. Choose a board doing `./config.sh board`, or `./config.sh` to see
+3. Choose a board doing `./config.sh board`, or `./config.sh` to see
    the list of supported boards.
 
 
@@ -51,7 +47,7 @@ you also need to install the following if you run it on 64bit system:
 	* rock_sdcard
 
 
-3. Run `make` to build and pack nand/emmc/sdcard image or `make help` to list available targets
+4. Run `make` to build and pack nand/emmc/sdcard image or `make help` to list available targets
 
 
     make

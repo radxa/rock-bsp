@@ -18,6 +18,7 @@ Getting Started
 
 1. install required packages:
 
+
         sudo apt-get install build-essential lzop libncurses5-dev libssl-dev libusb-1.0-0-dev libc6-i386
 
 2. get the source code
@@ -30,27 +31,27 @@ Getting Started
    the list of supported boards.
 
 
-    ./config.sh 
-    Usage: ./config.sh < board >
-    supported boards:
-	* q7_rk3188
-	* q7_rk3188_sdcard
-	* rock
-	* rock2_square
-	* rock2_square_sdcard
-	* rock_lite
-	* rock_lite_lvds
-	* rock_pro
-	* rock_pro_lvds
-	* rock_pro_lvds_sdcard
-	* rock_pro_sdcard
-	* rock_sdcard
+        ./config.sh 
+        Usage: ./config.sh < board >
+        supported boards:
+        * q7_rk3188
+        * q7_rk3188_sdcard
+        * rock
+        * rock2_square
+        * rock2_square_sdcard
+        * rock_lite
+        * rock_lite_lvds
+        * rock_pro
+        * rock_pro_lvds
+        * rock_pro_lvds_sdcard
+        * rock_pro_sdcard
+        * rock_sdcard
 
 
 4. Run `make` to build and pack nand/emmc/sdcard image or `make help` to list available targets
 
 
-    make
+        make
 
 Configuration
 -------------
@@ -74,4 +75,3 @@ The directory structure of rock-bsp is as below:
 * parameter: define kernel command line, emmc/nand partitions
 * rootfs: put your rootfs image here and add the image name in board_config
 * tools: tools developed by linux-rockchip community and arm toolchains
-    
